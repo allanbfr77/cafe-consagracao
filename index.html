@@ -477,7 +477,7 @@
         <div class="card-label">Seu nome</div>
         <div class="input-wrap">
           <span class="input-icon">👤</span>
-          <input type="text" id="nome" placeholder="Como você se chama?" autocomplete="name" required />
+          <input type="text" id="nome" placeholder="Digita aqui o seu nome" autocomplete="name" required />
         </div>
       </div>
 
@@ -505,7 +505,7 @@
       <div class="card">
         <div class="card-label">Outro item</div>
         <div class="outros-wrap">
-          <input type="text" id="outros" placeholder="Ex.: bolo de fubá…" />
+          <input type="text" id="outros" placeholder="Preencha somente se o item desejado não constar na lista" />
           <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item">＋</button>
         </div>
       </div>
@@ -555,10 +555,10 @@
 
     // ── Categories with emoji ────────────────────────────
     var CATEGORIAS = [
-      { nome: 'Pães & Bolos',    emoji: '🍞', palavras: ['pao','pão','bolo','cuca','broa','torrada','bisnaguinha','bisnaga','rosca','croissant','muffin','brioche'] },
-      { nome: 'Frios & Laticínios', emoji: '🧀', palavras: ['queijo','presunto','mussarela','mozzarella','ricota','requeijão','requeijao','iogurte','manteiga','margarina','cream cheese','creme de leite'] },
+      { nome: 'Pães & Bolos',    emoji: '🍞', palavras: ['pao','pão','bolo','cuca','broa','torrada','bisnaguinha','bisnaga','rosca','croissant','muffin','brioche', 'pães 8', '7 pães'] },
+      { nome: 'Frios & Laticínios', emoji: '🧀', palavras: ['mortadela','queijo','presunto','mussarela','mozzarella','ricota','requeijão','requeijao','iogurte','manteiga','margarina','cream cheese','creme de leite'] },
       { nome: 'Frutas',          emoji: '🍎', palavras: ['fruta','frutas','banana','maca','maçã','laranja','morango','uva','melancia','melão','mamao','mamão','abacaxi','kiwi','manga','pera'] },
-      { nome: 'Bebidas',         emoji: '☕', palavras: ['cafe','café','suco','leite','chá','cha','achocolatado','chocolate','nescau','ovomaltine','cappuccino','mate','caldo'] },
+      { nome: 'Bebidas',         emoji: '☕', palavras: ['cafe','café','suco','leite','chá','cha','achocolatado','chocolate','nescau','ovomaltine','cappuccino','mate','caldo', 'bebida'] },
       { nome: 'Geleias & Doces', emoji: '🍯', palavras: ['geleia','mel','doce','nutella','goiabada','brigadeiro','chocolate','bananada','amora','morango','framboesa'] },
       { nome: 'Salgados',        emoji: '🥐', palavras: ['coxinha','esfiha','enroladinho','pão de queijo','pão-de-queijo','salgado','kibe','croquete','pastel','sonho'] },
     ];
