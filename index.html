@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Café da Manhã — Consagração</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & tokens ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:       #7C4A1E;
+      --brand-mid:   #A0622A;
+      --brand-light: #D4915A;
+      --brand-pale:  #FBF0E6;
+      --brand-bg:    #FDF6EE;
+      --accent:      #E8732A;
+      --accent-soft: #FAE0CC;
+      --text-head:   #2D1A0D;
+      --text-body:   #4A2E18;
+      --text-muted:  #8C6A50;
+      --surface:     #FFFFFF;
+      --border:      #E8D5C0;
+      --shadow-sm:   0 1px 3px rgba(100,50,10,.10);
+      --shadow-md:   0 4px 16px rgba(100,50,10,.13);
+      --shadow-lg:   0 12px 40px rgba(100,50,10,.18);
+      --radius-sm:   10px;
+      --radius-md:   16px;
+      --radius-lg:   24px;
+      --transition:  .18s ease;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--brand-bg);
+      color: var(--text-body);
+      min-height: 100dvh;
+      line-height: 1.6;
+    }
+
+    /* ── Hero header ─────────────────────────────────── */
+    .hero {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 55%, var(--brand-light) 100%);
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='rgba(255,255,255,.06)' stroke-width='1'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='rgba(255,255,255,.04)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      pointer-events: none;
+    }
+    .hero-icon {
+      font-size: 3.2rem;
+      line-height: 1;
+      margin-bottom: .75rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.25));
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 2.2rem);
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+    }
+    .hero p {
+      margin-top: .5rem;
+      font-size: .95rem;
+      color: rgba(255,255,255,.82);
+      font-weight: 500;
+    }
+
+    /* ── Loading state ───────────────────────────────── */
+    #loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 3rem 1.5rem;
+    }
+    .spinner {
+      width: 42px;
+      height: 42px;
+      border: 3.5px solid var(--border);
+      border-top-color: var(--brand-mid);
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading-state p { color: var(--text-muted); font-size: .9rem; }
+
+    /* ── Main container ──────────────────────────────── */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 1rem 6rem;
+    }
+
+    /* ── Section card ────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+      margin-top: 1.25rem;
+      padding: 1.25rem 1.25rem 1.5rem;
+    }
+    .card-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--brand-mid);
+      margin-bottom: .6rem;
+    }
+
+    /* ── Name input ──────────────────────────────────── */
+    .input-wrap { position: relative; }
+    .input-wrap input {
+      width: 100%;
+      padding: .85rem 1rem .85rem 2.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font: 500 1rem 'Inter', sans-serif;
+      color: var(--text-head);
+      background: var(--brand-bg);
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+    }
+    .input-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
+    .input-wrap input:focus {
+      border-color: var(--brand-mid);
+      box-shadow: 0 0 0 3px rgba(160,98,42,.15);
+      background: #fff;
+    }
+    .input-icon {
+      position: absolute;
+      left: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.05rem;
+      pointer-events: none;
+    }
+
+    /* ── Category sections ───────────────────────────── */
+    #categorias-wrapper { display: flex; flex-direction: column; gap: .9rem; }
+
+    .categoria-section {}
+    .categoria-titulo {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      padding: 0 .2rem .5rem;
+      border-bottom: 1.5px solid var(--brand-pale);
+      margin-bottom: .65rem;
+    }
+    .categoria-titulo span:first-child { font-size: 1rem; }
+
+    /* ── Item chips ──────────────────────────────────── */
+    .itens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .5rem;
+    }
+
+    .item-chip {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      padding: .65rem .85rem;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--brand-bg);
+      cursor: pointer;
+      transition: all var(--transition);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .item-chip:hover { border-color: var(--brand-mid); background: var(--brand-pale); }
+    .item-chip.selecionado {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,115,42,.12);
+    }
+    .item-chip input[type="checkbox"] { display: none; }
+    .chip-check {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 2px solid var(--border);
+      background: #fff;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition);
+      font-size: .7rem;
+    }
+    .item-chip.selecionado .chip-check {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .chip-nome {
+      font-size: .88rem;
+      font-weight: 500;
+      color: var(--text-head);
+      line-height: 1.3;
+    }
+    .item-chip.selecionado .chip-nome { color: var(--brand); font-weight: 600; }
+
+    /* ── "Outro item" field ──────────────────────────── */
+    .outros-wrap {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+      margin-top: .5rem;
+    }
+    .outros-wrap input {
+      flex: 1;
+      padding: .75rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font: 500 .92rem 'Inter', sans-serif;
+      color: var(--text-head);
+      background: var(--brand-bg);
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .outros-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
+    .outros-wrap input:focus {
+      border-color: var(--brand-mid);
+      box-shadow: 0 0 0 3px rgba(160,98,42,.15);
+      background: #fff;
+    }
+    .btn-add-outro {
+      padding: .75rem 1rem;
+      background: var(--brand-pale);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background var(--transition), border-color var(--transition);
+      line-height: 1;
+    }
+    .btn-add-outro:hover { background: var(--accent-soft); border-color: var(--accent); }
+
+    /* ── Selected items preview ──────────────────────── */
+    #selecionados-preview {
+      display: none;
+      margin-top: 1rem;
+      padding: .85rem 1rem;
+      background: var(--accent-soft);
+      border: 1.5px solid var(--accent);
+      border-radius: var(--radius-sm);
+    }
+    #selecionados-preview.visible { display: block; }
+    .preview-label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--accent);
+      margin-bottom: .4rem;
+    }
+    #preview-lista {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .35rem;
+    }
+    .preview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .25rem .65rem;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 99px;
+      font-size: .78rem;
+      font-weight: 600;
+    }
+    .preview-tag button {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.8);
+      cursor: pointer;
+      font-size: .85rem;
+      padding: 0;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+    }
+    .preview-tag button:hover { color: #fff; }
+
+    /* ── Empty state ─────────────────────────────────── */
+    #empty-state {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+    }
+    #empty-state.visible { display: block; }
+    #empty-state .empty-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+    #empty-state p {
+      font-size: .92rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── Sticky CTA bar ──────────────────────────────── */
+    .cta-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 1rem 1.25rem max(1rem, env(safe-area-inset-bottom));
+      background: rgba(253,246,238,.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      z-index: 100;
+    }
+    .btn-submit {
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-sm);
+      font: 700 1rem 'Inter', sans-serif;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-md);
+      letter-spacing: .01em;
+    }
+    .btn-submit:hover:not(:disabled) {
+      opacity: .92;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-lg);
+    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-submit .btn-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2.5px solid rgba(255,255,255,.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+      display: none;
+    }
+    .btn-submit.loading .btn-spinner { display: block; }
+    .btn-submit.loading .btn-label { opacity: 0; position: absolute; }
+
+    /* ── Modals ──────────────────────────────────────── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30,15,5,.55);
+      z-index: 200;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
+
+    @media (min-width: 480px) {
+      .modal-overlay { align-items: center; }
+      .modal-sheet { border-radius: var(--radius-lg) !important; max-width: 420px; width: 100%; }
+    }
+
+    .modal-sheet {
+      background: var(--surface);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      width: 100%;
+      padding: 1.75rem 1.5rem 2rem;
+      animation: slideUp .25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    .modal-handle {
+      width: 40px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      margin: 0 auto 1.5rem;
+    }
+    .modal-icon { font-size: 2.5rem; text-align: center; margin-bottom: .75rem; }
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--text-head);
+      text-align: center;
+      margin-bottom: .4rem;
+    }
+    .modal-body {
+      font-size: .92rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    #confirmMessage, #errorMessage { font-weight: 500; color: var(--text-body); }
+    .modal-actions { display: flex; gap: .75rem; flex-direction: column; }
+    .modal-btn {
+      padding: .9rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font: 700 .95rem 'Inter', sans-serif;
+      border: none;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .modal-btn:hover { opacity: .88; }
+    .modal-btn:active { transform: scale(.98); }
+    .modal-btn.primary {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
+      color: #fff;
+    }
+    .modal-btn.secondary {
+      background: var(--brand-pale);
+      color: var(--brand);
+    }
+    .modal-btn.danger { background: #FEE2E2; color: #B91C1C; }
+
+    /* ── Error modal accent ──────────────────────────── */
+    #errorModal .modal-title { color: #B91C1C; }
+
+    /* ── Responsive tweaks ───────────────────────────── */
+    @media (min-width: 480px) {
+      .container { padding: 0 1.5rem 6rem; }
+      .itens-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <header class="hero">
+    <div class="hero-icon">☕</div>
+    <h1>Café da Manhã</h1>
+    <p>Consagração — marque os itens que você vai trazer</p>
+  </header>
+
+  <!-- Loading -->
+  <div id="loading-state">
+    <div class="spinner"></div>
+    <p>Carregando itens disponíveis…</p>
+  </div>
+
+  <!-- Form (hidden until items load) -->
+  <form id="formulario" style="display:none;" onsubmit="return false;">
+    <div class="container">
+
+      <!-- Name -->
+      <div class="card">
+        <div class="card-label">Seu nome</div>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="nome" placeholder="Como você se chama?" autocomplete="name" required />
+        </div>
+      </div>
+
+      <!-- Items by category -->
+      <div class="card">
+        <div class="card-label">Itens disponíveis</div>
+
+        <!-- Empty state (all items taken) -->
+        <div id="empty-state">
+          <div class="empty-icon">🎉</div>
+          <p>Todos os itens já foram reservados!<br>Use o campo abaixo para adicionar algo diferente.</p>
+        </div>
+
+        <!-- Categories rendered by JS -->
+        <div id="categorias-wrapper"></div>
+
+        <!-- Selected preview -->
+        <div id="selecionados-preview">
+          <div class="preview-label">✓ Selecionados</div>
+          <div id="preview-lista"></div>
+        </div>
+      </div>
+
+      <!-- Other item -->
+      <div class="card">
+        <div class="card-label">Outro item</div>
+        <div class="outros-wrap">
+          <input type="text" id="outros" placeholder="Ex.: bolo de fubá…" />
+          <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item">＋</button>
+        </div>
+      </div>
+
+    </div><!-- /container -->
+
+    <!-- Sticky CTA -->
+    <div class="cta-bar">
+      <button type="button" class="btn-submit" id="btnEnviar" onclick="confirmarEnvio()">
+        <div class="btn-spinner"></div>
+        <span class="btn-label">☕ &nbsp;Confirmar participação</span>
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Confirm modal -->
+  <div id="confirmModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-icon">🛒</div>
+      <div class="modal-title">Confirmar envio?</div>
+      <div class="modal-body" id="confirmMessage"></div>
+      <div class="modal-actions">
+        <button class="modal-btn primary" onclick="enviarDados()">Sim, confirmar</button>
+        <button class="modal-btn secondary" onclick="fecharModal('confirmModal')">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error modal -->
+  <div id="errorModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-icon">⚠️</div>
+      <div class="modal-title">Atenção</div>
+      <div class="modal-body" id="errorMessage"></div>
+      <div class="modal-actions">
+        <button class="modal-btn danger" onclick="fecharModal('errorModal')">Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Config ──────────────────────────────────────────
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8vj6QTBjUUtQgh4jkhygAuuu8kO3BEI5f8UdeDVckkGrFc_y5ADo4MFBBiW-BbIj9nQ/exec';
+
+    // ── Categories with emoji ────────────────────────────
+    var CATEGORIAS = [
+      { nome: 'Pães & Bolos',    emoji: '🍞', palavras: ['pao','pão','bolo','cuca','broa','torrada','bisnaguinha','bisnaga','rosca','croissant','muffin','brioche'] },
+      { nome: 'Frios & Laticínios', emoji: '🧀', palavras: ['queijo','presunto','mussarela','mozzarella','ricota','requeijão','requeijao','iogurte','manteiga','margarina','cream cheese','creme de leite'] },
+      { nome: 'Frutas',          emoji: '🍎', palavras: ['fruta','frutas','banana','maca','maçã','laranja','morango','uva','melancia','melão','mamao','mamão','abacaxi','kiwi','manga','pera'] },
+      { nome: 'Bebidas',         emoji: '☕', palavras: ['cafe','café','suco','leite','chá','cha','achocolatado','chocolate','nescau','ovomaltine','cappuccino','mate','caldo'] },
+      { nome: 'Geleias & Doces', emoji: '🍯', palavras: ['geleia','mel','doce','nutella','goiabada','brigadeiro','chocolate','bananada','amora','morango','framboesa'] },
+      { nome: 'Salgados',        emoji: '🥐', palavras: ['coxinha','esfiha','enroladinho','pão de queijo','pão-de-queijo','salgado','kibe','croquete','pastel','sonho'] },
+    ];
+
+    function detectarCategoria(nomeItem) {
+      var lower = nomeItem.toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '');
+      for (var i = 0; i < CATEGORIAS.length; i++) {
+        for (var j = 0; j < CATEGORIAS[i].palavras.length; j++) {
+          if (lower.includes(CATEGORIAS[i].palavras[j])) return i;
+        }
+      }
+      return -1; // Outros
+    }
+
+    // ── State ────────────────────────────────────────────
+    var itensSelecionados = [];
+
+    // ── Load items from sheet ────────────────────────────
+    window.addEventListener('DOMContentLoaded', function() {
+      fetch(SCRIPT_URL + '?action=getItems')
+        .then(function(r) { return r.json(); })
+        .then(function(items) {
+          document.getElementById('loading-state').style.display = 'none';
+          document.getElementById('formulario').style.display = 'block';
+          renderizarItens(items);
+        })
+        .catch(function(err) {
+          document.getElementById('loading-state').innerHTML =
+            '<p style="color:#B91C1C;font-weight:600;padding:1rem;text-align:center">⚠️ Não foi possível carregar os itens.<br><small style="font-weight:400">Verifique a URL do Web App no código.</small></p>';
+          console.error('Erro ao carregar itens:', err);
+        });
+    });
+
+    // ── Render items grouped by category ────────────────
+    function renderizarItens(items) {
+      var wrapper = document.getElementById('categorias-wrapper');
+      wrapper.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        verificarEmptyState(true);
+        return;
+      }
+
+      // Bucket items into categories
+      var buckets = {};
+      items.forEach(function(item) {
+        var idx = detectarCategoria(item.nome);
+        var key = idx === -1 ? '__outros' : idx;
+        if (!buckets[key]) buckets[key] = [];
+        buckets[key].push(item.nome);
+      });
+
+      // Render defined categories first, then Outros
+      var order = [];
+      for (var i = 0; i < CATEGORIAS.length; i++) {
+        if (buckets[i]) order.push({ idx: i, nomes: buckets[i] });
+      }
+      if (buckets['__outros']) {
+        order.push({ idx: -1, nomes: buckets['__outros'] });
+      }
+
+      order.forEach(function(grupo) {
+        var cat = grupo.idx === -1
+          ? { nome: 'Outros', emoji: '🫙' }
+          : CATEGORIAS[grupo.idx];
+
+        var section = document.createElement('div');
+        section.className = 'categoria-section';
+
+        var titulo = document.createElement('div');
+        titulo.className = 'categoria-titulo';
+        titulo.innerHTML = '<span>' + cat.emoji + '</span><span>' + cat.nome + '</span>';
+        section.appendChild(titulo);
+
+        var grid = document.createElement('div');
+        grid.className = 'itens-grid';
+
+        grupo.nomes.forEach(function(nome) {
+          var chip = criarChip(nome);
+          grid.appendChild(chip);
+        });
+
+        section.appendChild(grid);
+        wrapper.appendChild(section);
+      });
+
+      verificarEmptyState(false);
+    }
+
+    function criarChip(nome) {
+      var label = document.createElement('label');
+      label.className = 'item-chip';
+      label.setAttribute('data-item', nome);
+
+      var input = document.createElement('input');
+      input.type = 'checkbox';
+      input.value = nome;
+      input.addEventListener('change', function() {
+        toggleItem(nome, this.checked, label);
+      });
+
+      var check = document.createElement('div');
+      check.className = 'chip-check';
+      check.textContent = '✓';
+
+      var span = document.createElement('span');
+      span.className = 'chip-nome';
+      span.textContent = nome;
+
+      label.appendChild(input);
+      label.appendChild(check);
+      label.appendChild(span);
+      return label;
+    }
+
+    function toggleItem(nome, marcado, chipEl) {
+      if (marcado) {
+        if (!itensSelecionados.includes(nome)) itensSelecionados.push(nome);
+        chipEl.classList.add('selecionado');
+      } else {
+        itensSelecionados = itensSelecionados.filter(function(i) { return i !== nome; });
+        chipEl.classList.remove('selecionado');
+      }
+      atualizarPreview();
+    }
+
+    // ── Preview bar ──────────────────────────────────────
+    function atualizarPreview() {
+      var preview = document.getElementById('selecionados-preview');
+      var lista = document.getElementById('preview-lista');
+      lista.innerHTML = '';
+
+      if (itensSelecionados.length === 0) {
+        preview.classList.remove('visible');
+        return;
+      }
+      preview.classList.add('visible');
+
+      itensSelecionados.forEach(function(nome) {
+        var tag = document.createElement('div');
+        tag.className = 'preview-tag';
+        tag.innerHTML = nome + ' <button type="button" onclick="removerItem(\'' + nome.replace(/'/g, "\\'") + '\')" aria-label="Remover">×</button>';
+        lista.appendChild(tag);
+      });
+    }
+
+    function removerItem(nome) {
+      itensSelecionados = itensSelecionados.filter(function(i) { return i !== nome; });
+      // Uncheck the chip
+      var chips = document.querySelectorAll('.item-chip');
+      chips.forEach(function(chip) {
+        if (chip.getAttribute('data-item') === nome) {
+          chip.classList.remove('selecionado');
+          chip.querySelector('input').checked = false;
+        }
+      });
+      atualizarPreview();
+    }
+
+    // ── Remover chips com animação (used when all taken) ─
+    function removerItensComAnimacao(itens) {
+      itens.forEach(function(nome) {
+        var chips = document.querySelectorAll('.item-chip');
+        chips.forEach(function(chip) {
+          if (chip.getAttribute('data-item') === nome) {
+            chip.style.transition = 'opacity .3s, transform .3s';
+            chip.style.opacity = '0';
+            chip.style.transform = 'scale(.9)';
+            setTimeout(function() { chip.remove(); verificarEmptyState(); }, 320);
+          }
+        });
+      });
+    }
+
+    // ── Empty state ──────────────────────────────────────
+    function verificarEmptyState(forcar) {
+      var chips = document.querySelectorAll('#categorias-wrapper .item-chip');
+      var vazio = forcar || chips.length === 0;
+      document.getElementById('empty-state').classList.toggle('visible', vazio);
+    }
+
+    // ── Add custom item ──────────────────────────────────
+    function adicionarOutro() {
+      var input = document.getElementById('outros');
+      var valor = input.value.trim();
+      if (!valor) return;
+
+      if (itensSelecionados.includes(valor)) {
+        input.value = '';
+        return;
+      }
+      itensSelecionados.push(valor);
+      atualizarPreview();
+      input.value = '';
+      input.focus();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('outros').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') { e.preventDefault(); adicionarOutro(); }
+      });
+    });
+
+    // ── Confirm modal ────────────────────────────────────
+    function confirmarEnvio() {
+      var nome = document.getElementById('nome').value.trim();
+      if (!nome) {
+        mostrarErro('Por favor, informe seu nome antes de continuar.');
+        return;
+      }
+      if (itensSelecionados.length === 0) {
+        mostrarErro('Selecione pelo menos um item para confirmar.');
+        return;
+      }
+      var lista = itensSelecionados.map(function(i) { return '• ' + i; }).join('\n');
+      document.getElementById('confirmMessage').innerHTML =
+        '<strong>' + escapeHtml(nome) + '</strong> vai trazer:<br><br>' +
+        itensSelecionados.map(function(i) { return '• ' + escapeHtml(i); }).join('<br>');
+      document.getElementById('confirmModal').classList.add('open');
+    }
+
+    function fecharModal(id) {
+      document.getElementById(id).classList.remove('open');
+    }
+
+    function mostrarErro(msg) {
+      document.getElementById('errorMessage').textContent = msg;
+      document.getElementById('errorModal').classList.add('open');
+    }
+
+    // ── Close modal on overlay click ─────────────────────
+    document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) overlay.classList.remove('open');
+      });
+    });
+
+    // ── Submit ───────────────────────────────────────────
+    function enviarDados() {
+      fecharModal('confirmModal');
+
+      var nome  = document.getElementById('nome').value.trim();
+      var btn   = document.getElementById('btnEnviar');
+
+      btn.disabled = true;
+      btn.classList.add('loading');
+
+      var params = new URLSearchParams();
+      params.append('nome', nome);
+      params.append('itens', JSON.stringify(itensSelecionados));
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: params
+      })
+      .then(function() {
+        // no-cors → opaque response; treat as success
+        mostrarSucesso(nome, itensSelecionados.slice());
+        removerItensComAnimacao(itensSelecionados);
+        itensSelecionados = [];
+        atualizarPreview();
+        document.getElementById('nome').value = '';
+      })
+      .catch(function(err) {
+        console.error('Erro ao enviar:', err);
+        mostrarErro('Não foi possível enviar. Verifique sua conexão e tente novamente.');
+      })
+      .finally(function() {
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      });
+    }
+
+    function mostrarSucesso(nome, itens) {
+      document.getElementById('confirmMessage').innerHTML =
+        '🎉 <strong>' + escapeHtml(nome) + '</strong>, sua participação foi registrada!<br><br>' +
+        'Itens: ' + itens.map(escapeHtml).join(', ');
+      document.getElementById('confirmModal').classList.add('open');
+
+      // Replace buttons with just "OK"
+      var actions = document.querySelector('#confirmModal .modal-actions');
+      actions.innerHTML = '<button class="modal-btn primary" onclick="fecharModal(\'confirmModal\')">Perfeito! ☕</button>';
+      // Restore buttons after modal close
+      document.getElementById('confirmModal').addEventListener('click', function restoreBtn(e) {
+        actions.innerHTML =
+          '<button class="modal-btn primary" onclick="enviarDados()">Sim, confirmar</button>' +
+          '<button class="modal-btn secondary" onclick="fecharModal(\'confirmModal\')">Voltar</button>';
+        document.getElementById('confirmModal').removeEventListener('click', restoreBtn);
+      }, { once: true });
+    }
+
+    // ── Helpers ──────────────────────────────────────────
+    function escapeHtml(str) {
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+  </script>
+</body>
+</html>
