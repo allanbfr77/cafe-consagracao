@@ -12,25 +12,31 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --brand:       #7C4A1E;
-      --brand-mid:   #A0622A;
-      --brand-light: #D4915A;
-      --brand-pale:  #FBF0E6;
-      --brand-bg:    #FDF6EE;
-      --accent:      #E8732A;
-      --accent-soft: #FAE0CC;
-      --text-head:   #2D1A0D;
-      --text-body:   #4A2E18;
-      --text-muted:  #8C6A50;
-      --surface:     #FFFFFF;
-      --border:      #E8D5C0;
-      --shadow-sm:   0 1px 3px rgba(100,50,10,.10);
-      --shadow-md:   0 4px 16px rgba(100,50,10,.13);
-      --shadow-lg:   0 12px 40px rgba(100,50,10,.18);
-      --radius-sm:   10px;
-      --radius-md:   16px;
-      --radius-lg:   24px;
-      --transition:  .18s ease;
+      --brand:         #7C4A1E;
+      --brand-mid:     #A0622A;
+      --brand-light:   #D4915A;
+      --brand-pale:    #FBF0E6;
+      --brand-bg:      #FDF6EE;
+      --accent:        #E8732A;
+      --accent-soft:   #FAE0CC;
+      /* ── Green for selected state ── */
+      --selected:      #16a34a;
+      --selected-soft: #dcfce7;
+      --selected-dark: #14532d;
+      --selected-glow: rgba(22,163,74,.14);
+      /* ── Text & surface ── */
+      --text-head:     #2D1A0D;
+      --text-body:     #4A2E18;
+      --text-muted:    #8C6A50;
+      --surface:       #FFFFFF;
+      --border:        #E8D5C0;
+      --shadow-sm:     0 1px 3px rgba(100,50,10,.10);
+      --shadow-md:     0 4px 16px rgba(100,50,10,.13);
+      --shadow-lg:     0 12px 40px rgba(100,50,10,.18);
+      --radius-sm:     10px;
+      --radius-md:     16px;
+      --radius-lg:     24px;
+      --transition:    .18s ease;
     }
 
     html { scroll-behavior: smooth; }
@@ -101,7 +107,7 @@
     .container {
       max-width: 600px;
       margin: 0 auto;
-      padding: 0 1rem 6rem;
+      padding: 0 1rem 7rem;
     }
 
     /* ── Section card ────────────────────────────────── */
@@ -120,6 +126,13 @@
       letter-spacing: .08em;
       color: var(--brand-mid);
       margin-bottom: .6rem;
+    }
+
+    /* ── Divider entre card-label e categorias ───────── */
+    .card-section-divider {
+      height: 1px;
+      background: var(--border);
+      margin: .5rem 0 1rem;
     }
 
     /* ── Name input ──────────────────────────────────── */
@@ -151,9 +164,17 @@
     }
 
     /* ── Category sections ───────────────────────────── */
-    #categorias-wrapper { display: flex; flex-direction: column; gap: .9rem; }
+    #categorias-wrapper { display: flex; flex-direction: column; }
 
-    .categoria-section {}
+    .categoria-section { }
+
+    /* Divisória fina entre categorias */
+    .categoria-section + .categoria-section {
+      margin-top: .85rem;
+      padding-top: .85rem;
+      border-top: 1px solid var(--border);
+    }
+
     .categoria-titulo {
       display: flex;
       align-items: center;
@@ -190,12 +211,13 @@
       -webkit-tap-highlight-color: transparent;
     }
     .item-chip:hover { border-color: var(--brand-mid); background: var(--brand-pale); }
+
+    /* ── VERDE ao selecionar ─────────────────────────── */
     .item-chip.selecionado {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(232,115,42,.12);
+      background: var(--selected-soft);
+      border-color: var(--selected);
+      box-shadow: 0 0 0 3px var(--selected-glow);
     }
-    .item-chip input[type="checkbox"] { display: none; }
     .chip-check {
       width: 18px;
       height: 18px;
@@ -207,12 +229,12 @@
       align-items: center;
       justify-content: center;
       transition: all var(--transition);
-      font-size: .7rem;
+      color: transparent; /* oculta o SVG no estado não selecionado */
     }
     .item-chip.selecionado .chip-check {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
+      background: var(--selected);
+      border-color: var(--selected);
+      color: #fff; /* exibe o SVG apenas quando selecionado */
     }
     .chip-nome {
       font-size: .88rem;
@@ -220,14 +242,57 @@
       color: var(--text-head);
       line-height: 1.3;
     }
-    .item-chip.selecionado .chip-nome { color: var(--brand); font-weight: 600; }
+    .item-chip.selecionado .chip-nome {
+      color: var(--selected-dark);
+      font-weight: 600;
+    }
 
-    /* ── "Outro item" field ──────────────────────────── */
+    /* ── "Outro item" collapsible ────────────────────── */
+    .outros-toggle-bar {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      cursor: pointer;
+      user-select: none;
+      padding: .1rem 0;
+      transition: opacity var(--transition);
+    }
+    .outros-toggle-bar:hover { opacity: .75; }
+    .outros-toggle-bar .card-label { margin: 0; flex: 1; }
+    .eye-btn { font-size: 1.1rem; line-height: 1; }
+    .toggle-indicator {
+      font-size: .75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .outros-content {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      transition: max-height .32s ease, opacity .25s ease, margin-top .2s ease;
+    }
+    .outros-content.open {
+      max-height: 260px;
+      opacity: 1;
+      margin-top: .85rem;
+    }
+    .outros-hint {
+      font-size: .82rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-bottom: .75rem;
+      padding: .55rem .8rem;
+      background: var(--brand-pale);
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--brand-light);
+      line-height: 1.5;
+    }
     .outros-wrap {
       display: flex;
       gap: .5rem;
       align-items: center;
-      margin-top: .5rem;
     }
     .outros-wrap input {
       flex: 1;
@@ -263,19 +328,38 @@
       display: none;
       margin-top: 1rem;
       padding: .85rem 1rem;
-      background: var(--accent-soft);
-      border: 1.5px solid var(--accent);
+      background: var(--selected-soft);
+      border: 1.5px solid var(--selected);
       border-radius: var(--radius-sm);
     }
     #selecionados-preview.visible { display: block; }
+
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .5rem;
+    }
     .preview-label {
       font-size: .72rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: .07em;
-      color: var(--accent);
-      margin-bottom: .4rem;
+      color: var(--selected);
     }
+    .btn-limpar-inline {
+      background: none;
+      border: 1px solid #fca5a5;
+      border-radius: 6px;
+      font-size: .72rem;
+      color: #b91c1c;
+      cursor: pointer;
+      padding: .2rem .55rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+    .btn-limpar-inline:hover { background: #fee2e2; }
+
     #preview-lista {
       display: flex;
       flex-wrap: wrap;
@@ -286,7 +370,7 @@
       align-items: center;
       gap: .3rem;
       padding: .25rem .65rem;
-      background: var(--accent);
+      background: var(--selected);
       color: #fff;
       border-radius: 99px;
       font-size: .78rem;
@@ -325,8 +409,8 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 1rem 1.25rem max(1rem, env(safe-area-inset-bottom));
-      background: rgba(253,246,238,.92);
+      padding: .85rem 1.25rem max(1rem, env(safe-area-inset-bottom));
+      background: rgba(253,246,238,.94);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-top: 1px solid var(--border);
@@ -421,7 +505,34 @@
       line-height: 1.6;
       margin-bottom: 1.5rem;
     }
-    #confirmMessage, #errorMessage { font-weight: 500; color: var(--text-body); }
+    .modal-body.items-list {
+      text-align: left;
+      background: var(--brand-pale);
+      border-radius: var(--radius-sm);
+      padding: .75rem 1rem;
+      color: var(--text-body);
+      max-height: 240px;
+      overflow-y: auto;
+      line-height: 1.8;
+    }
+    .grupo-resumo { }
+    .grupo-sep {
+      margin-top: .6rem;
+      padding-top: .6rem;
+      border-top: 1px dashed var(--border);
+    }
+    .grupo-item-linha {
+      font-size: .88rem;
+      color: var(--text-body);
+    }
+    .total-line {
+      font-size: .82rem;
+      font-weight: 700;
+      color: var(--selected-dark);
+      margin-top: .25rem;
+      padding-top: .25rem;
+      border-top: 1px solid rgba(22,163,74,.25);
+    }
     .modal-actions { display: flex; gap: .75rem; flex-direction: column; }
     .modal-btn {
       padding: .9rem 1.5rem;
@@ -437,18 +548,29 @@
       background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
       color: #fff;
     }
-    .modal-btn.secondary {
-      background: var(--brand-pale);
-      color: var(--brand);
-    }
-    .modal-btn.danger { background: #FEE2E2; color: #B91C1C; }
+    .modal-btn.secondary { background: var(--brand-pale); color: var(--brand); }
+    .modal-btn.danger    { background: #FEE2E2; color: #B91C1C; }
 
-    /* ── Error modal accent ──────────────────────────── */
     #errorModal .modal-title { color: #B91C1C; }
 
-    /* ── Responsive tweaks ───────────────────────────── */
+    /* ── SVG Icon sizing ─────────────────────────────── */
+    .hero-icon svg          { width: 56px; height: 56px; display: block; margin: 0 auto;
+                              filter: drop-shadow(0 4px 12px rgba(0,0,0,.25)); }
+    .input-icon svg         { width: 18px; height: 18px; }
+    .empty-icon svg         { width: 52px; height: 52px; color: var(--text-muted); }
+    .cat-icone              { display: flex; align-items: center; }
+    .cat-icone svg          { width: 16px; height: 16px; }
+    .chip-check svg         { width: 11px; height: 11px; }
+    .eye-btn                { display: flex; align-items: center; }
+    .eye-btn svg            { width: 18px; height: 18px; }
+    .modal-icon svg         { width: 48px; height: 48px; margin: 0 auto; display: block; }
+    .btn-limpar-inline svg  { width: 13px; height: 13px; vertical-align: -2px; }
+    .btn-label svg          { width: 18px; height: 18px; vertical-align: -4px; }
+    .preview-label svg      { width: 13px; height: 13px; vertical-align: -2px; }
+
+    /* ── Responsive ──────────────────────────────────── */
     @media (min-width: 480px) {
-      .container { padding: 0 1.5rem 6rem; }
+      .container { padding: 0 1.5rem 7rem; }
       .itens-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
     }
   </style>
@@ -457,9 +579,16 @@
 
   <!-- Hero -->
   <header class="hero">
-    <div class="hero-icon">☕</div>
-    <h1>Café da Manhã</h1>
-    <p>Consagração — marque os itens que você vai trazer</p>
+    <div class="hero-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M17 8h2a2 2 0 1 1 0 4h-2"/>
+        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/>
+        <path d="M7 3c0 1.4 1.6 1.4 1.6 2.8"/>
+        <path d="M11 3c0 1.4 1.6 1.4 1.6 2.8"/>
+      </svg>
+    </div>
+    <h1>CAFÉ DA MANHÃ</h1>
+    <p>CONSAGRAÇÃO — marque, abaixo, os itens que você deseja contribuir.</p>
   </header>
 
   <!-- Loading -->
@@ -476,7 +605,11 @@
       <div class="card">
         <div class="card-label">Seu nome</div>
         <div class="input-wrap">
-          <span class="input-icon">👤</span>
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+          </span>
           <input type="text" id="nome" placeholder="Digita aqui o seu nome" autocomplete="name" required />
         </div>
       </div>
@@ -484,10 +617,16 @@
       <!-- Items by category -->
       <div class="card">
         <div class="card-label">Itens disponíveis</div>
+        <!-- Linha divisória entre header e categorias -->
+        <div class="card-section-divider"></div>
 
         <!-- Empty state (all items taken) -->
         <div id="empty-state">
-          <div class="empty-icon">🎉</div>
+          <div class="empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+            </svg>
+          </div>
           <p>Todos os itens já foram reservados!<br>Use o campo abaixo para adicionar algo diferente.</p>
         </div>
 
@@ -496,51 +635,92 @@
 
         <!-- Selected preview -->
         <div id="selecionados-preview">
-          <div class="preview-label">✓ Selecionados</div>
+          <div class="preview-header">
+            <div class="preview-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Selecionados
+            </div>
+            <button type="button" class="btn-limpar-inline" onclick="limparSelecao()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Limpar tudo
+            </button>
+          </div>
           <div id="preview-lista"></div>
         </div>
       </div>
 
-      <!-- Other item -->
+      <!-- Other item (collapsible) -->
       <div class="card">
-        <div class="card-label">Outro item</div>
-        <div class="outros-wrap">
-          <input type="text" id="outros" placeholder="Preencha somente se o item desejado não constar na lista" />
-          <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item">＋</button>
+        <div class="outros-toggle-bar" onclick="toggleOutros()" id="outrosToggle" role="button" aria-expanded="false">
+          <span class="eye-btn" id="eyeIcon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </span>
+          <span class="card-label">Outro item</span>
+          <span class="toggle-indicator" id="eyeLabel">▼ mostrar</span>
+        </div>
+        <div id="outros-content" class="outros-content">
+          <p class="outros-hint">Preencha somente se desejar levar um item que <strong>não está na lista acima</strong>.</p>
+          <div class="outros-wrap">
+            <input type="text" id="outros" placeholder="Descreva o item…" />
+            <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item">＋</button>
+          </div>
         </div>
       </div>
 
     </div><!-- /container -->
 
-    <!-- Sticky CTA -->
+    <!-- Sticky CTA bar -->
     <div class="cta-bar">
       <button type="button" class="btn-submit" id="btnEnviar" onclick="confirmarEnvio()">
         <div class="btn-spinner"></div>
-        <span class="btn-label">☕ &nbsp;Confirmar participação</span>
+        <span class="btn-label">Confirmar participação</span>
       </button>
     </div>
 
   </form>
 
-  <!-- Confirm modal -->
+  <!-- ── Modal: Revisão / Confirmação de envio ──────── -->
   <div id="confirmModal" class="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
-      <div class="modal-icon">🛒</div>
-      <div class="modal-title">Confirmar envio?</div>
-      <div class="modal-body" id="confirmMessage"></div>
-      <div class="modal-actions">
-        <button class="modal-btn primary" onclick="enviarDados()">Sim, confirmar</button>
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-mid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </div>
+      <div class="modal-title" id="confirmTitle">Você deseja contribuir:</div>
+      <div class="modal-body items-list" id="confirmMessage"></div>
+      <div class="modal-actions" id="confirmActions">
+        <button class="modal-btn primary" onclick="enviarDados()">Confirmar</button>
         <button class="modal-btn secondary" onclick="fecharModal('confirmModal')">Voltar</button>
       </div>
     </div>
   </div>
 
-  <!-- Error modal -->
+  <!-- ── Modal: Item do mesmo tipo já selecionado ─── -->
+  <div id="duplicadoModal" class="modal-overlay" role="dialog" aria-modal="true">
+    <div class="modal-sheet">
+      <div class="modal-handle"></div>
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E8732A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div class="modal-title">Atenção!</div>
+      <div class="modal-body">
+        Você já selecionou <strong id="duplicadoNomeExistente"></strong>.<br><br>
+        Tem certeza que deseja levar também <strong id="duplicadoNomeNovo"></strong>?
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn primary" onclick="confirmarDuplicado()">Sim, quero os dois</button>
+        <button class="modal-btn secondary" onclick="cancelarDuplicado()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Modal: Erro ────────────────────────────────── -->
   <div id="errorModal" class="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
-      <div class="modal-icon">⚠️</div>
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#E8732A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
       <div class="modal-title">Atenção</div>
       <div class="modal-body" id="errorMessage"></div>
       <div class="modal-actions">
@@ -550,50 +730,223 @@
   </div>
 
   <script>
-    // ── Config ──────────────────────────────────────────
+    // ── Config ──────────────────────────────────────────────────────────────
     var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz8vj6QTBjUUtQgh4jkhygAuuu8kO3BEI5f8UdeDVckkGrFc_y5ADo4MFBBiW-BbIj9nQ/exec';
 
-    // ── Categories with emoji ────────────────────────────
+    // ── SVG Icons ────────────────────────────────────────────────────────────
+    var SVG = {
+      // Ícone olho aberto
+      eyeOpen:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+      // Ícone olho fechado
+      eyeClosed:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94' +
+        'M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>' +
+        '<line x1="1" y1="1" x2="23" y2="23"/></svg>',
+      // Checkmark para chip
+      check:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+        '<polyline points="20 6 9 17 4 12"/></svg>',
+      // Categoria: Pães & Bolos
+      bread:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M3 10a7 7 0 0 1 7-7h4a7 7 0 0 1 7 7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1z"/>' +
+        '<rect x="3" y="12" width="18" height="8" rx="1"/></svg>',
+      // Categoria: Frios & Laticínios
+      fridge:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="4" y="2" width="16" height="20" rx="2"/>' +
+        '<line x1="4" y1="10" x2="20" y2="10"/>' +
+        '<line x1="9" y1="6" x2="9" y2="8"/>' +
+        '<line x1="9" y1="14" x2="9" y2="18"/></svg>',
+      // Categoria: Frutas
+      apple:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M12 20.94c1.5 0 4.5-2 4.5-8.94C16.5 5 14 3 12 3c-2 0-4.5 2-4.5 9 0 6.94 3 8.94 4.5 8.94z"/>' +
+        '<path d="M12 3c0-1.5 1-2.5 2-2.5"/></svg>',
+      // Categoria: Bebidas
+      cup:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M17 8h2a2 2 0 1 1 0 4h-2"/>' +
+        '<path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/></svg>',
+      // Categoria: Geleias & Doces
+      jar:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M8 2h8l1 4H7z"/>' +
+        '<rect x="5" y="6" width="14" height="15" rx="2"/>' +
+        '<line x1="5" y1="10" x2="19" y2="10"/></svg>',
+      // Categoria: Salgados
+      fork:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<line x1="8" y1="2" x2="8" y2="10"/><line x1="12" y1="2" x2="12" y2="10"/><line x1="16" y1="2" x2="16" y2="10"/>' +
+        '<path d="M8 10a4 4 0 0 0 4 4 4 4 0 0 0 4-4"/>' +
+        '<line x1="12" y1="14" x2="12" y2="22"/></svg>',
+      // Categoria: Outros
+      box:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<polyline points="21 8 21 21 3 21 3 8"/>' +
+        '<rect x="1" y="3" width="22" height="5"/>' +
+        '<line x1="10" y1="12" x2="14" y2="12"/></svg>',
+    };
+
+    // ── Categorias ───────────────────────────────────────────────────────────
     var CATEGORIAS = [
-      { nome: 'Pães & Bolos',    emoji: '🍞', palavras: ['pao','pão','bolo','cuca','broa','torrada','bisnaguinha','bisnaga','rosca','croissant','muffin','brioche', 'pães 8', '7 pães'] },
-      { nome: 'Frios & Laticínios', emoji: '🧀', palavras: ['mortadela','queijo','presunto','mussarela','mozzarella','ricota','requeijão','requeijao','iogurte','manteiga','margarina','cream cheese','creme de leite'] },
-      { nome: 'Frutas',          emoji: '🍎', palavras: ['fruta','frutas','banana','maca','maçã','laranja','morango','uva','melancia','melão','mamao','mamão','abacaxi','kiwi','manga','pera'] },
-      { nome: 'Bebidas',         emoji: '☕', palavras: ['cafe','café','suco','leite','chá','cha','achocolatado','chocolate','nescau','ovomaltine','cappuccino','mate','caldo', 'bebida'] },
-      { nome: 'Geleias & Doces', emoji: '🍯', palavras: ['geleia','mel','doce','nutella','goiabada','brigadeiro','chocolate','bananada','amora','morango','framboesa'] },
-      { nome: 'Salgados',        emoji: '🥐', palavras: ['coxinha','esfiha','enroladinho','pão de queijo','pão-de-queijo','salgado','kibe','croquete','pastel','sonho'] },
+      {
+        nome: 'Pães & Bolos', icone: SVG.bread,
+        palavras: ['pae', 'pao', 'bolo', 'cuca', 'broa', 'torrada', 'bisnaguinha', 'bisnaga',
+                   'rosca', 'croissant', 'muffin', 'brioche', 'panetone']
+      },
+      {
+        nome: 'Frios & Laticínios', icone: SVG.fridge,
+        palavras: ['mortadela', 'queijo', 'presunto', 'mussarela', 'mozzarella', 'ricota',
+                   'requeijao', 'iogurte', 'manteiga', 'margarina', 'cream cheese', 'creme de leite']
+      },
+      {
+        nome: 'Frutas', icone: SVG.apple,
+        palavras: ['fruta', 'banana', 'maca', 'laranja', 'morango', 'uva', 'melancia',
+                   'melao', 'mamao', 'abacaxi', 'kiwi', 'manga', 'pera', 'pessego', 'cereja']
+      },
+      {
+        nome: 'Bebidas', icone: SVG.cup,
+        palavras: ['cafe', 'suco', 'leite', 'cha', 'achocolatado', 'cappuccino', 'mate',
+                   'caldo', 'bebida', 'nescau', 'ovomaltine', 'refrigerante', 'agua', 'garrafa']
+      },
+      {
+        nome: 'Geleias & Doces', icone: SVG.jar,
+        palavras: ['geleia', 'mel ', 'doce', 'nutella', 'goiabada', 'brigadeiro', 'bananada', 'amora', 'framboesa']
+      },
+      {
+        nome: 'Salgados', icone: SVG.fork,
+        palavras: ['coxinha', 'esfiha', 'enroladinho', 'salgado', 'kibe', 'croquete', 'pastel', 'sonho']
+      },
     ];
 
-    function detectarCategoria(nomeItem) {
-      var lower = nomeItem.toLowerCase()
+    // Normaliza string: minúsculas + remove acentos
+    function normalizar(str) {
+      return String(str).toLowerCase()
         .normalize('NFD').replace(/[̀-ͯ]/g, '');
+    }
+
+    // Detecta categoria de um item pelo nome
+    // CORREÇÃO: normaliza AMBOS os lados + strip de quantidade numérica inicial
+    function detectarCategoria(nomeItem) {
+      var normFull = normalizar(nomeItem);
+      // Remove quantidade inicial: "8 pães" → "paes" | "250g queijo" → "queijo"
+      var normSemQtd = normFull.replace(/^\d+(?:[.,]\d+)?\s*(g|kg|ml|l)?\s*/i, '');
+
       for (var i = 0; i < CATEGORIAS.length; i++) {
-        for (var j = 0; j < CATEGORIAS[i].palavras.length; j++) {
-          if (lower.includes(CATEGORIAS[i].palavras[j])) return i;
+        var palavras = CATEGORIAS[i].palavras;
+        for (var j = 0; j < palavras.length; j++) {
+          var kw = normalizar(palavras[j]);
+          if (normSemQtd.includes(kw) || normFull.includes(kw)) return i;
         }
       }
       return -1; // Outros
     }
 
-    // ── State ────────────────────────────────────────────
-    var itensSelecionados = [];
+    // ── State ────────────────────────────────────────────────────────────────
+    // Conjunto de nomes originais selecionados
+    var itensSelecionados     = {};   // { [nomeOriginal]: true }
+    var itemDuplicadoPendente = null; // { nomeNovo, chipEl }
 
-    // ── Load items from sheet ────────────────────────────
-    window.addEventListener('DOMContentLoaded', function() {
+    // ── Helpers de nome ───────────────────────────────────────────────────────
+
+    // Remove o sufixo identificador do item, retornando o "tipo base":
+    //   "8 PÃES (III)"          → "8 PÃES"
+    //   "250G DE MORTADELA (I)" → "250G DE MORTADELA"
+    //   "BOLO 2"                → "BOLO"
+    //   "BEBIDA 15"             → "BEBIDA"
+    //   "GARRAFA de CAFÉ 1"     → "GARRAFA de CAFÉ"
+    //   "OVOS MEXIDOS (FEITO NA HORA)" → inalterado (parêntese não-romano)
+    function getNomeBase(nome) {
+      return nome.trim()
+        .replace(/\s*\(\s*[IVXivx]+\s*\)\s*$/, '')  // remove (I) (II) (III)…
+        .replace(/\s+\d+\s*$/, '')                   // remove número final
+        .trim();
+    }
+
+    // Retorna o item já selecionado do mesmo tipo, ou null
+    function encontrarDuplicadoDoTipo(nomeNovo) {
+      var baseNovo     = getNomeBase(nomeNovo);
+      var selecionados = Object.keys(itensSelecionados);
+      for (var i = 0; i < selecionados.length; i++) {
+        if (getNomeBase(selecionados[i]) === baseNovo) return selecionados[i];
+      }
+      return null;
+    }
+
+    // Extrai quantidade e unidade do nome base:
+    //   "8 PÃES"           → { qty:8,   unit:'',  resto:'PÃES' }
+    //   "250G DE MORTADELA"→ { qty:250, unit:'g', resto:'DE MORTADELA' }
+    //   "BOLO"             → { qty:null, unit:'', resto:'BOLO' }
+    function parseQuantidade(nomeBase) {
+      var m = nomeBase.match(/^(\d+(?:[.,]\d+)?)\s*(g|kg|ml|l)?\s*(.*)/i);
+      if (m && m[1]) {
+        return {
+          qty:   parseFloat(m[1].replace(',', '.')),
+          unit:  (m[2] || '').toLowerCase(),
+          resto: m[3].trim()
+        };
+      }
+      return { qty: null, unit: '', resto: nomeBase };
+    }
+
+    // Agrupa itens selecionados por tipo base e calcula totais
+    function calcularGrupos() {
+      var grupos = {}; // { [nomeBase]: { items:[], totalQty, unit, resto, hasQty } }
+      Object.keys(itensSelecionados).forEach(function (nome) {
+        var base   = getNomeBase(nome);
+        var parsed = parseQuantidade(base);
+        if (!grupos[base]) {
+          grupos[base] = {
+            items:    [],
+            totalQty: 0,
+            unit:     parsed.unit,
+            resto:    parsed.resto,
+            hasQty:   parsed.qty !== null
+          };
+        }
+        grupos[base].items.push(nome);
+        if (parsed.qty !== null) grupos[base].totalQty += parsed.qty;
+      });
+      return grupos;
+    }
+
+    // Formata a linha de total de um grupo
+    function formatarTotal(g) {
+      if (g.hasQty) {
+        var q    = g.totalQty;
+        var qStr = Number.isInteger(q) ? String(q) : q.toFixed(0);
+        return qStr + (g.unit ? g.unit + ' ' : ' ') + g.resto;
+      }
+      return g.items.length + 'x ' + g.resto;
+    }
+
+    // ── Carregar itens do Sheet ───────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', function () {
       fetch(SCRIPT_URL + '?action=getItems')
-        .then(function(r) { return r.json(); })
-        .then(function(items) {
+        .then(function (r) { return r.json(); })
+        .then(function (items) {
           document.getElementById('loading-state').style.display = 'none';
-          document.getElementById('formulario').style.display = 'block';
+          document.getElementById('formulario').style.display  = 'block';
           renderizarItens(items);
         })
-        .catch(function(err) {
+        .catch(function (err) {
           document.getElementById('loading-state').innerHTML =
-            '<p style="color:#B91C1C;font-weight:600;padding:1rem;text-align:center">⚠️ Não foi possível carregar os itens.<br><small style="font-weight:400">Verifique a URL do Web App no código.</small></p>';
+            '<p style="color:#B91C1C;font-weight:600;padding:1rem;text-align:center">' +
+            'Não foi possível carregar os itens.<br>' +
+            '<small style="font-weight:400">Verifique a URL do Web App no código.</small></p>';
           console.error('Erro ao carregar itens:', err);
         });
+
+      document.getElementById('outros').addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); adicionarOutro(); }
+      });
     });
 
-    // ── Render items grouped by category ────────────────
+    // ── Renderizar itens agrupados por categoria ──────────────────────────────
     function renderizarItens(items) {
       var wrapper = document.getElementById('categorias-wrapper');
       wrapper.innerHTML = '';
@@ -603,27 +956,25 @@
         return;
       }
 
-      // Bucket items into categories
+      // Bucketizar
       var buckets = {};
-      items.forEach(function(item) {
+      items.forEach(function (item) {
         var idx = detectarCategoria(item.nome);
         var key = idx === -1 ? '__outros' : idx;
         if (!buckets[key]) buckets[key] = [];
         buckets[key].push(item.nome);
       });
 
-      // Render defined categories first, then Outros
+      // Ordem: categorias definidas primeiro, depois Outros
       var order = [];
       for (var i = 0; i < CATEGORIAS.length; i++) {
         if (buckets[i]) order.push({ idx: i, nomes: buckets[i] });
       }
-      if (buckets['__outros']) {
-        order.push({ idx: -1, nomes: buckets['__outros'] });
-      }
+      if (buckets['__outros']) order.push({ idx: -1, nomes: buckets['__outros'] });
 
-      order.forEach(function(grupo) {
+      order.forEach(function (grupo) {
         var cat = grupo.idx === -1
-          ? { nome: 'Outros', emoji: '🫙' }
+          ? { nome: 'Outros', icone: SVG.box }
           : CATEGORIAS[grupo.idx];
 
         var section = document.createElement('div');
@@ -631,15 +982,14 @@
 
         var titulo = document.createElement('div');
         titulo.className = 'categoria-titulo';
-        titulo.innerHTML = '<span>' + cat.emoji + '</span><span>' + cat.nome + '</span>';
+        titulo.innerHTML = '<span class="cat-icone">' + cat.icone + '</span><span>' + cat.nome + '</span>';
         section.appendChild(titulo);
 
         var grid = document.createElement('div');
         grid.className = 'itens-grid';
 
-        grupo.nomes.forEach(function(nome) {
-          var chip = criarChip(nome);
-          grid.appendChild(chip);
+        grupo.nomes.forEach(function (nome) {
+          grid.appendChild(criarChip(nome));
         });
 
         section.appendChild(grid);
@@ -649,138 +999,228 @@
       verificarEmptyState(false);
     }
 
+    // ── Criar chip de item ────────────────────────────────────────────────────
     function criarChip(nome) {
-      var label = document.createElement('label');
-      label.className = 'item-chip';
-      label.setAttribute('data-item', nome);
-
-      var input = document.createElement('input');
-      input.type = 'checkbox';
-      input.value = nome;
-      input.addEventListener('change', function() {
-        toggleItem(nome, this.checked, label);
-      });
+      var chip = document.createElement('div');
+      chip.className = 'item-chip';
+      chip.setAttribute('data-item', nome);
+      chip.setAttribute('role', 'checkbox');
+      chip.setAttribute('aria-checked', 'false');
+      chip.setAttribute('tabindex', '0');
 
       var check = document.createElement('div');
       check.className = 'chip-check';
-      check.textContent = '✓';
+      check.innerHTML = SVG.check;
 
       var span = document.createElement('span');
       span.className = 'chip-nome';
       span.textContent = nome;
 
-      label.appendChild(input);
-      label.appendChild(check);
-      label.appendChild(span);
-      return label;
+      chip.appendChild(check);
+      chip.appendChild(span);
+
+      // Click: intercepta completamente (sem checkbox nativo)
+      chip.addEventListener('click', function () {
+        handleChipClick(nome, chip);
+      });
+      chip.addEventListener('keydown', function (e) {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          handleChipClick(nome, chip);
+        }
+      });
+
+      return chip;
     }
 
-    function toggleItem(nome, marcado, chipEl) {
-      if (marcado) {
-        if (!itensSelecionados.includes(nome)) itensSelecionados.push(nome);
-        chipEl.classList.add('selecionado');
-      } else {
-        itensSelecionados = itensSelecionados.filter(function(i) { return i !== nome; });
+    function handleChipClick(nome, chipEl) {
+      // ── Toggle: clicou em item já selecionado → remove ──
+      if (itensSelecionados[nome]) {
+        delete itensSelecionados[nome];
         chipEl.classList.remove('selecionado');
+        chipEl.setAttribute('aria-checked', 'false');
+        atualizarPreview();
+        return;
       }
-      atualizarPreview();
+
+      // ── Aviso de mesmo tipo já selecionado ──
+      var duplicado = encontrarDuplicadoDoTipo(nome);
+      if (duplicado) {
+        itemDuplicadoPendente = { nomeNovo: nome, chipEl: chipEl };
+        document.getElementById('duplicadoNomeExistente').textContent = duplicado;
+        document.getElementById('duplicadoNomeNovo').textContent      = nome;
+        document.getElementById('duplicadoModal').classList.add('open');
+        return;
+      }
+
+      // ── Selecionar ──
+      selecionarChip(nome, chipEl);
     }
 
-    // ── Preview bar ──────────────────────────────────────
+    function selecionarChip(nome, chipEl) {
+      itensSelecionados[nome] = true;
+      chipEl.classList.add('selecionado');
+      chipEl.setAttribute('aria-checked', 'true');
+      atualizarPreview();
+      verificarListaCheia();
+    }
+
+    // ── Confirmar seleção de item duplicado ───────────────────────────────────
+    function confirmarDuplicado() {
+      if (!itemDuplicadoPendente) return;
+      selecionarChip(itemDuplicadoPendente.nomeNovo, itemDuplicadoPendente.chipEl);
+      fecharModal('duplicadoModal');
+      itemDuplicadoPendente = null;
+    }
+
+    function cancelarDuplicado() {
+      fecharModal('duplicadoModal');
+      itemDuplicadoPendente = null;
+    }
+
+    // ── Verificar se lista foi totalmente preenchida → abrir Outros ───────────
+    function verificarListaCheia() {
+      var todos = document.querySelectorAll('#categorias-wrapper .item-chip');
+      if (todos.length === 0) return;
+      var todosMarcados = Array.from(todos).every(function (c) {
+        return c.classList.contains('selecionado');
+      });
+      if (todosMarcados) abrirOutros();
+    }
+
+    // ── Outros: toggle com "olho" ─────────────────────────────────────────────
+    var outrosAberto = false;
+
+    function toggleOutros() {
+      outrosAberto ? fecharOutros() : abrirOutros();
+    }
+
+    function abrirOutros() {
+      if (outrosAberto) return;
+      outrosAberto = true;
+      var content = document.getElementById('outros-content');
+      var toggle  = document.getElementById('outrosToggle');
+      content.classList.add('open');
+      document.getElementById('eyeIcon').innerHTML  = SVG.eyeClosed;
+      document.getElementById('eyeLabel').textContent = '▲ ocultar';
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function fecharOutros() {
+      if (!outrosAberto) return;
+      outrosAberto = false;
+      var content = document.getElementById('outros-content');
+      var toggle  = document.getElementById('outrosToggle');
+      content.classList.remove('open');
+      document.getElementById('eyeIcon').innerHTML  = SVG.eyeOpen;
+      document.getElementById('eyeLabel').textContent = '▼ mostrar';
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    // ── Atualizar preview ─────────────────────────────────────────────────────
     function atualizarPreview() {
       var preview = document.getElementById('selecionados-preview');
-      var lista = document.getElementById('preview-lista');
+      var lista   = document.getElementById('preview-lista');
       lista.innerHTML = '';
 
-      if (itensSelecionados.length === 0) {
+      var nomes = Object.keys(itensSelecionados);
+      if (nomes.length === 0) {
         preview.classList.remove('visible');
         return;
       }
       preview.classList.add('visible');
 
-      itensSelecionados.forEach(function(nome) {
-        var tag = document.createElement('div');
+      nomes.forEach(function (nome) {
+        var tag      = document.createElement('div');
         tag.className = 'preview-tag';
-        tag.innerHTML = nome + ' <button type="button" onclick="removerItem(\'' + nome.replace(/'/g, "\\'") + '\')" aria-label="Remover">×</button>';
+        var safeNome = nome.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        tag.innerHTML =
+          escapeHtml(nome) +
+          ' <button type="button" onclick="removerItem(\'' + safeNome + '\')" aria-label="Remover ' + escapeHtml(nome) + '">×</button>';
         lista.appendChild(tag);
       });
     }
 
     function removerItem(nome) {
-      itensSelecionados = itensSelecionados.filter(function(i) { return i !== nome; });
-      // Uncheck the chip
-      var chips = document.querySelectorAll('.item-chip');
-      chips.forEach(function(chip) {
+      delete itensSelecionados[nome];
+      document.querySelectorAll('.item-chip').forEach(function (chip) {
         if (chip.getAttribute('data-item') === nome) {
           chip.classList.remove('selecionado');
-          chip.querySelector('input').checked = false;
+          chip.setAttribute('aria-checked', 'false');
         }
       });
       atualizarPreview();
     }
 
-    // ── Remover chips com animação (used when all taken) ─
-    function removerItensComAnimacao(itens) {
-      itens.forEach(function(nome) {
-        var chips = document.querySelectorAll('.item-chip');
-        chips.forEach(function(chip) {
-          if (chip.getAttribute('data-item') === nome) {
-            chip.style.transition = 'opacity .3s, transform .3s';
-            chip.style.opacity = '0';
-            chip.style.transform = 'scale(.9)';
-            setTimeout(function() { chip.remove(); verificarEmptyState(); }, 320);
-          }
-        });
+    // ── Limpar toda a seleção ─────────────────────────────────────────────────
+    function limparSelecao() {
+      itensSelecionados = {};
+      document.querySelectorAll('.item-chip').forEach(function (chip) {
+        chip.classList.remove('selecionado');
+        chip.setAttribute('aria-checked', 'false');
       });
+      atualizarPreview();
     }
 
-    // ── Empty state ──────────────────────────────────────
+    // ── Adicionar item personalizado ──────────────────────────────────────────
+    function adicionarOutro() {
+      var input = document.getElementById('outros');
+      var valor = input.value.trim();
+      if (!valor) return;
+      if (itensSelecionados[valor]) { input.value = ''; return; }
+      itensSelecionados[valor] = true;
+      atualizarPreview();
+      input.value = '';
+      input.focus();
+    }
+
+    // ── Empty state ───────────────────────────────────────────────────────────
     function verificarEmptyState(forcar) {
       var chips = document.querySelectorAll('#categorias-wrapper .item-chip');
       var vazio = forcar || chips.length === 0;
       document.getElementById('empty-state').classList.toggle('visible', vazio);
     }
 
-    // ── Add custom item ──────────────────────────────────
-    function adicionarOutro() {
-      var input = document.getElementById('outros');
-      var valor = input.value.trim();
-      if (!valor) return;
-
-      if (itensSelecionados.includes(valor)) {
-        input.value = '';
-        return;
-      }
-      itensSelecionados.push(valor);
-      atualizarPreview();
-      input.value = '';
-      input.focus();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('outros').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') { e.preventDefault(); adicionarOutro(); }
-      });
-    });
-
-    // ── Confirm modal ────────────────────────────────────
+    // ── Tela de revisão antes do envio ────────────────────────────────────────
     function confirmarEnvio() {
       var nome = document.getElementById('nome').value.trim();
-      if (!nome) {
-        mostrarErro('Por favor, informe seu nome antes de continuar.');
-        return;
-      }
-      if (itensSelecionados.length === 0) {
+      if (!nome) { mostrarErro('Por favor, informe seu nome antes de continuar.'); return; }
+      if (Object.keys(itensSelecionados).length === 0) {
         mostrarErro('Selecione pelo menos um item para confirmar.');
         return;
       }
-      var lista = itensSelecionados.map(function(i) { return '• ' + i; }).join('\n');
-      document.getElementById('confirmMessage').innerHTML =
-        '<strong>' + escapeHtml(nome) + '</strong> vai trazer:<br><br>' +
-        itensSelecionados.map(function(i) { return '• ' + escapeHtml(i); }).join('<br>');
+
+      var grupos = calcularGrupos();
+      var html   = '';
+      var bases  = Object.keys(grupos);
+
+      bases.forEach(function (base, idx) {
+        var g = grupos[base];
+        // Abre grupo
+        html += '<div class="grupo-resumo' + (idx > 0 ? ' grupo-sep' : '') + '">';
+
+        // Lista cada item do grupo
+        g.items.forEach(function (item) {
+          html += '<div class="grupo-item-linha">• ' + escapeHtml(item) + '</div>';
+        });
+
+        // Linha de total (só quando há 2+ itens do mesmo tipo)
+        if (g.items.length >= 2) {
+          html += '<div class="total-line">Total: ' + escapeHtml(formatarTotal(g)) + '</div>';
+        }
+
+        html += '</div>';
+      });
+
+      document.getElementById('confirmTitle').textContent = 'Você deseja contribuir:';
+      document.getElementById('confirmMessage').innerHTML = html;
+      document.getElementById('confirmActions').innerHTML =
+        '<button class="modal-btn primary" onclick="enviarDados()">Confirmar</button>' +
+        '<button class="modal-btn secondary" onclick="fecharModal(\'confirmModal\')">Voltar</button>';
       document.getElementById('confirmModal').classList.add('open');
     }
 
+    // ── Fechar modal ──────────────────────────────────────────────────────────
     function fecharModal(id) {
       document.getElementById(id).classList.remove('open');
     }
@@ -790,71 +1230,81 @@
       document.getElementById('errorModal').classList.add('open');
     }
 
-    // ── Close modal on overlay click ─────────────────────
-    document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
-      overlay.addEventListener('click', function(e) {
+    // Fechar modal clicando fora
+    document.querySelectorAll('.modal-overlay').forEach(function (overlay) {
+      overlay.addEventListener('click', function (e) {
         if (e.target === overlay) overlay.classList.remove('open');
       });
     });
 
-    // ── Submit ───────────────────────────────────────────
+    // ── Enviar dados ao Google Sheets ─────────────────────────────────────────
     function enviarDados() {
       fecharModal('confirmModal');
 
-      var nome  = document.getElementById('nome').value.trim();
-      var btn   = document.getElementById('btnEnviar');
-
+      var nome = document.getElementById('nome').value.trim();
+      var btn  = document.getElementById('btnEnviar');
       btn.disabled = true;
       btn.classList.add('loading');
 
-      var params = new URLSearchParams();
-      params.append('nome', nome);
-      params.append('itens', JSON.stringify(itensSelecionados));
+      var itensParaEnviar = Object.keys(itensSelecionados);
 
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: params
-      })
-      .then(function() {
-        // no-cors → opaque response; treat as success
-        mostrarSucesso(nome, itensSelecionados.slice());
-        removerItensComAnimacao(itensSelecionados);
-        itensSelecionados = [];
-        atualizarPreview();
-        document.getElementById('nome').value = '';
-      })
-      .catch(function(err) {
-        console.error('Erro ao enviar:', err);
-        mostrarErro('Não foi possível enviar. Verifique sua conexão e tente novamente.');
-      })
-      .finally(function() {
-        btn.disabled = false;
-        btn.classList.remove('loading');
+      var params = new URLSearchParams();
+      params.append('nome',  nome);
+      params.append('itens', JSON.stringify(itensParaEnviar));
+
+      fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: params })
+        .then(function () {
+          // no-cors → resposta opaca; tratamos como sucesso
+          var nomesOriginais = Object.keys(itensSelecionados).slice();
+          mostrarSucesso(nome, itensParaEnviar.slice());
+          removerItensComAnimacao(nomesOriginais);
+          itensSelecionados = {};
+          atualizarPreview();
+          document.getElementById('nome').value = '';
+        })
+        .catch(function (err) {
+          console.error('Erro ao enviar:', err);
+          mostrarErro('Não foi possível enviar. Verifique sua conexão e tente novamente.');
+        })
+        .finally(function () {
+          btn.disabled = false;
+          btn.classList.remove('loading');
+        });
+    }
+
+    function removerItensComAnimacao(nomes) {
+      nomes.forEach(function (nome) {
+        document.querySelectorAll('.item-chip').forEach(function (chip) {
+          if (chip.getAttribute('data-item') === nome) {
+            chip.style.transition = 'opacity .3s, transform .3s';
+            chip.style.opacity    = '0';
+            chip.style.transform  = 'scale(.9)';
+            setTimeout(function () {
+              chip.remove();
+              verificarEmptyState();
+            }, 320);
+          }
+        });
       });
     }
 
     function mostrarSucesso(nome, itens) {
+      document.getElementById('confirmTitle').textContent = 'Tudo certo! 🎉';
       document.getElementById('confirmMessage').innerHTML =
-        '🎉 <strong>' + escapeHtml(nome) + '</strong>, sua participação foi registrada!<br><br>' +
+        '<strong>' + escapeHtml(nome) + '</strong>, sua participação foi registrada!<br><br>' +
         'Itens: ' + itens.map(escapeHtml).join(', ');
+      document.getElementById('confirmActions').innerHTML =
+        '<button class="modal-btn primary" onclick="fecharModal(\'confirmModal\')">Perfeito! ☕</button>';
       document.getElementById('confirmModal').classList.add('open');
-
-      // Replace buttons with just "OK"
-      var actions = document.querySelector('#confirmModal .modal-actions');
-      actions.innerHTML = '<button class="modal-btn primary" onclick="fecharModal(\'confirmModal\')">Perfeito! ☕</button>';
-      // Restore buttons after modal close
-      document.getElementById('confirmModal').addEventListener('click', function restoreBtn(e) {
-        actions.innerHTML =
-          '<button class="modal-btn primary" onclick="enviarDados()">Sim, confirmar</button>' +
-          '<button class="modal-btn secondary" onclick="fecharModal(\'confirmModal\')">Voltar</button>';
-        document.getElementById('confirmModal').removeEventListener('click', restoreBtn);
-      }, { once: true });
     }
 
-    // ── Helpers ──────────────────────────────────────────
+    // ── Helpers ───────────────────────────────────────────────────────────────
     function escapeHtml(str) {
-      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
     }
   </script>
 </body>
