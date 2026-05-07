@@ -686,7 +686,7 @@
       <div class="modal-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-mid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       </div>
-      <div class="modal-title" id="confirmTitle">Você deseja contribuir:</div>
+      <div class="modal-title" id="confirmTitle">Você deseja contribuir com:</div>
       <div class="modal-body items-list" id="confirmMessage"></div>
       <div class="modal-actions" id="confirmActions">
         <button class="modal-btn primary" onclick="enviarDados()">Confirmar</button>
@@ -1294,7 +1294,7 @@
         '<strong>' + escapeHtml(nome) + '</strong>, sua participação foi registrada!<br><br>' +
         'Itens: ' + itens.map(escapeHtml).join(', ');
       document.getElementById('confirmActions').innerHTML =
-        '<button class="modal-btn primary" onclick="fecharModal(\'confirmModal\')">Perfeito! ☕</button>';
+        '<button class="modal-btn primary" onclick="fecharModal(\'confirmModal\')">Obrigado! ☕</button>';
       document.getElementById('confirmModal').classList.add('open');
     }
 
