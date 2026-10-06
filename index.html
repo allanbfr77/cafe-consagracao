@@ -3,267 +3,476 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Café da Manhã — Consagração</title>
+  <meta name="theme-color" content="#0B0B0C" />
+  <title>INVB - Café da Manhã da Consagração</title>
+  <link rel="icon" type="image/png" href="icone.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
-    /* ── Reset & tokens ─────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    /*
+     * Mesma linguagem do site da igreja (invbotafogo.com.br): foto de fundo
+     * escurecida, painéis de vidro escuro com cantos de 14px, fio e selo
+     * dourados, botões em pílula e Montserrat.
+     *
+     * A logo (logo.png), a foto de fundo (fundo.webp) e o ícone da aba
+     * (icone.png) ficam na raiz do repositório, ao lado deste index.html.
+     */
     :root {
-      --brand:         #7C4A1E;
-      --brand-mid:     #A0622A;
-      --brand-light:   #D4915A;
-      --brand-pale:    #FBF0E6;
-      --brand-bg:      #FDF6EE;
-      --accent:        #E8732A;
-      --accent-soft:   #FAE0CC;
-      /* ── Green for selected state ── */
-      --selected:      #16a34a;
-      --selected-soft: #dcfce7;
-      --selected-dark: #14532d;
-      --selected-glow: rgba(22,163,74,.14);
-      /* ── Text & surface ── */
-      --text-head:     #2D1A0D;
-      --text-body:     #4A2E18;
-      --text-muted:    #8C6A50;
-      --surface:       #FFFFFF;
-      --border:        #E8D5C0;
-      --shadow-sm:     0 1px 3px rgba(100, 10, 10, 0.1);
-      --shadow-md:     0 4px 16px rgba(100,50,10,.13);
-      --shadow-lg:     0 12px 40px rgba(100,50,10,.18);
-      --radius-sm:     10px;
-      --radius-md:     16px;
-      --radius-lg:     24px;
-      --transition:    .18s ease;
+      color-scheme: dark;
+      --ink: #0B0B0C;
+      --paper: #F6F5F1;
+      --dim: rgba(246, 245, 241, .62);
+      --gold: #E6B23E;
+      --gold-hi: #F6D27A;
+      --line: rgba(230, 178, 62, .26);
+      --glass: rgba(20, 20, 22, .55);
+      --fio: rgba(255, 255, 255, .08);
+      --campo: rgba(246, 245, 241, .06);
+      --campo-borda: rgba(246, 245, 241, .2);
+      --vermelho: #fca5a5;
+      --fundo: #14110e;
     }
 
-    html { scroll-behavior: smooth; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html { scroll-behavior: smooth; background-color: var(--fundo); }
 
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--brand-bg);
-      color: var(--text-body);
-      min-height: 100dvh;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--paper);
       line-height: 1.6;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* ── Hero header ─────────────────────────────────── */
-    .hero {
-      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 55%, var(--brand-light) 100%);
-      padding: 3rem 1.5rem 2.5rem;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
+    /* A foto do site, escurecida a 70%, numa camada fixa própria —
+       `background-attachment: fixed` não funciona no celular. */
+    body::before {
+      content: "";
+      position: fixed;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='20' fill='none' stroke='rgba(255,255,255,.06)' stroke-width='1'/%3E%3Ccircle cx='30' cy='30' r='10' fill='none' stroke='rgba(255,255,255,.04)' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      z-index: -1;
       pointer-events: none;
-    }
-    .hero-icon {
-      font-size: 3.2rem;
-      line-height: 1;
-      margin-bottom: .75rem;
-      filter: drop-shadow(0 4px 12px rgba(0,0,0,.25));
-    }
-    .hero h1 {
-      font-size: clamp(1.6rem, 5vw, 2.2rem);
-      font-weight: 800;
-      color: #fff;
-      letter-spacing: -.02em;
-      line-height: 1.2;
-    }
-    .hero p {
-      margin-top: .5rem;
-      font-size: .95rem;
-      color: rgba(255,255,255,.82);
-      font-weight: 500;
+      transform: translateZ(0);
+      background-color: var(--fundo);
+      background-image:
+        linear-gradient(rgba(0, 0, 0, .7), rgba(0, 0, 0, .7)),
+        url('fundo.webp');
+      background-repeat: no-repeat, no-repeat;
+      background-position: center, center;
+      background-size: 100% 100%, cover;
     }
 
-    /* ── Loading state ───────────────────────────────── */
+    /* ── Topo ─────────────────────────────────────────── */
+    .topo {
+      display: flex;
+      align-items: center;
+      height: 70px;
+      padding: 0 7.5%;
+      background-color: rgba(11, 11, 12, .95);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+    }
+
+    .topo a { display: flex; align-items: center; }
+
+    .topo img {
+      display: block;
+      width: auto;
+      height: 56px;
+      filter: brightness(0) invert(1);
+      transition: opacity .2s ease;
+    }
+
+    .topo a:hover img { opacity: .85; }
+
+    .topo a:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    /* ── Página ───────────────────────────────────────── */
+    .pagina {
+      flex: 1 0 auto;
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 56px) clamp(16px, 4vw, 28px) clamp(40px, 7vw, 72px);
+    }
+
+    /* ── Abertura ─────────────────────────────────────── */
+    .abertura { padding: 4px 0 clamp(20px, 3vw, 28px); }
+
+    .kicker {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .abertura h1 {
+      margin-top: 14px;
+      font-size: clamp(2.1rem, 5.4vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .abertura p {
+      max-width: 460px;
+      margin-top: 16px;
+      font-size: clamp(1rem, 2.4vw, 1.1rem);
+      line-height: 1.7;
+      color: var(--dim);
+    }
+
+    /* ── Carregando ───────────────────────────────────── */
     #loading-state {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1rem;
       padding: 3rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 14px;
+      background: var(--glass);
+      text-align: center;
     }
+
     .spinner {
       width: 42px;
       height: 42px;
-      border: 3.5px solid var(--border);
-      border-top-color: var(--brand-mid);
+      border: 3.5px solid rgba(246, 245, 241, .15);
+      border-top-color: var(--gold);
       border-radius: 50%;
       animation: spin .75s linear infinite;
     }
+
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loading-state p { color: var(--text-muted); font-size: .9rem; }
 
-    /* ── Main container ──────────────────────────────── */
-    .container {
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 0 1rem 7rem;
+    #loading-state p { color: var(--dim); font-size: .95rem; }
+
+    /* ── Grade do formulário ──────────────────────────── */
+    /* No celular, uma coluna só, na ordem do preenchimento: nome, itens,
+       selecionados, outro item; o botão fica preso embaixo da tela. No
+       computador, duas (ver o @media mais abaixo). */
+    .grade {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    /* ── Section card ────────────────────────────────── */
+    .coluna { display: contents; }
+    .card--nome { order: 1; }
+    .card--itens { order: 2; }
+    #selecionados-preview { order: 3; }
+    .card--outro { order: 4; }
+    .cta-bar { order: 5; }
+
+    /* ── Painéis ──────────────────────────────────────── */
     .card {
-      background: var(--surface);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      margin-top: 1.25rem;
-      padding: 1.25rem 1.25rem 1.5rem;
-    }
-    .card-label {
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      color: var(--brand-mid);
-      margin-bottom: .6rem;
+      padding: clamp(18px, 3vw, 26px);
+      border: 1px solid rgba(255, 255, 255, .06);
+      border-radius: 14px;
+      background: var(--glass);
     }
 
-    /* ── Divider entre card-label e categorias ───────── */
-    .card-section-divider {
-      height: 1px;
-      background: var(--border);
-      margin: .5rem 0 1rem;
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
-    /* ── Name input ──────────────────────────────────── */
-    .input-wrap { position: relative; }
-    .input-wrap input {
+    .card-icon,
+    .eye-btn {
+      flex: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(230, 178, 62, .12);
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* ── Nome ─────────────────────────────────────────── */
+    /* 16px evita o zoom automático do iPhone ao tocar no campo. */
+    .campo {
       width: 100%;
-      padding: .85rem 1rem .85rem 2.8rem;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font: 500 1rem 'Inter', sans-serif;
-      color: var(--text-head);
-      background: var(--brand-bg);
-      transition: border-color var(--transition), box-shadow var(--transition);
-      outline: none;
-    }
-    .input-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
-    .input-wrap input:focus {
-      border-color: var(--brand-mid);
-      box-shadow: 0 0 0 3px rgba(160,98,42,.15);
-      background: #fff;
-    }
-    .input-icon {
-      position: absolute;
-      left: .9rem;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1.05rem;
-      pointer-events: none;
+      padding: 13px 15px;
+      border: 1px solid var(--campo-borda);
+      border-radius: 10px;
+      background: var(--campo);
+      color: var(--paper);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 500;
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
     }
 
-    /* ── Category sections ───────────────────────────── */
+    .campo::placeholder { color: rgba(246, 245, 241, .4); font-weight: 400; }
+
+    .campo:focus {
+      outline: none;
+      border-color: var(--gold);
+      background: rgba(246, 245, 241, .08);
+      box-shadow: 0 0 0 3px rgba(230, 178, 62, .25);
+    }
+
+    /* Preenchimento automático do navegador: sem isto o campo fica claro. */
+    .campo:-webkit-autofill {
+      -webkit-text-fill-color: var(--paper);
+      -webkit-box-shadow: 0 0 0 1000px #221d17 inset;
+      caret-color: var(--paper);
+      transition: background-color 9999s ease-out 0s;
+    }
+
+    /* ── Itens por categoria ──────────────────────────── */
     #categorias-wrapper { display: flex; flex-direction: column; }
 
-    .categoria-section { }
+    .categoria-section + .categoria-section { margin-top: 22px; }
 
-    /* Divisória fina entre categorias */
-    .categoria-section + .categoria-section {
-      margin-top: .85rem;
-      padding-top: .85rem;
-      border-top: 1px solid var(--border);
-    }
-
+    /* Nome da categoria à esquerda, fio até a borda. */
     .categoria-titulo {
       display: flex;
       align-items: center;
-      gap: .5rem;
-      font-size: .8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: var(--text-muted);
-      padding: 0 .2rem .5rem;
-      border-bottom: 1.5px solid var(--brand-pale);
-      margin-bottom: .65rem;
+      gap: 10px;
+      margin-bottom: 12px;
+      font-size: 15px;
+      font-weight: 600;
     }
-    .categoria-titulo span:first-child { font-size: 1rem; }
 
-    /* ── Item chips ──────────────────────────────────── */
+    .categoria-titulo::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--fio);
+    }
+
+    .cat-icone { display: flex; align-items: center; color: var(--gold); }
+    .cat-icone svg { width: 17px; height: 17px; }
+
     .itens-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: .5rem;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 8px;
     }
 
     .item-chip {
       display: flex;
       align-items: center;
-      gap: .55rem;
-      padding: .65rem .85rem;
-      border-radius: var(--radius-sm);
-      border: 1.5px solid var(--border);
-      background: var(--brand-bg);
+      gap: 10px;
+      min-height: 52px;
+      padding: 10px 12px;
+      border: 1px solid rgba(246, 245, 241, .12);
+      border-radius: 10px;
+      background: rgba(246, 245, 241, .03);
       cursor: pointer;
-      transition: all var(--transition);
       user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      transition: background-color .15s ease, border-color .15s ease;
     }
-    .item-chip:hover { border-color: var(--brand-mid); background: var(--brand-pale); }
 
-    /* ── VERDE ao selecionar ─────────────────────────── */
-    .item-chip.selecionado {
-      background: var(--selected-soft);
-      border-color: var(--selected);
-      box-shadow: 0 0 0 3px var(--selected-glow);
+    .item-chip:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 2px;
     }
+
+    .item-chip.selecionado {
+      border-color: rgba(230, 178, 62, .7);
+      background: rgba(230, 178, 62, .1);
+    }
+
+    /* A caixinha de marcar: dourada quando marcada. */
     .chip-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 5px;
-      border: 2px solid var(--border);
-      background: #fff;
-      flex-shrink: 0;
+      flex: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(246, 245, 241, .35);
+      border-radius: 6px;
+      display: grid;
+      place-items: center;
+      color: transparent; /* esconde o ✓ enquanto não está marcado */
+      transition: background-color .15s ease, border-color .15s ease;
+    }
+
+    .chip-check svg { width: 12px; height: 12px; }
+
+    .item-chip.selecionado .chip-check {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--ink);
+    }
+
+    .chip-nome {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+
+    .item-chip.selecionado .chip-nome { color: var(--gold-hi); font-weight: 600; }
+
+    @media (hover: hover) {
+      .item-chip:not(.selecionado):hover { border-color: rgba(230, 178, 62, .45); }
+    }
+
+    /* Todos os itens já foram escolhidos. */
+    #empty-state {
+      display: none;
+      padding: 1.5rem 1rem;
+      text-align: center;
+    }
+
+    #empty-state.visible { display: block; }
+
+    #empty-state .empty-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(230, 178, 62, .12);
+      color: var(--gold);
+      font-size: 22px;
+    }
+
+    #empty-state p { font-size: .95rem; line-height: 1.6; color: var(--dim); }
+
+    /* ── Selecionados ─────────────────────────────────── */
+    /* O cartão de destaque do site: fio e fundo dourados. */
+    #selecionados-preview {
+      display: none;
+      padding: 16px 18px 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(230, 178, 62, .08);
+    }
+
+    #selecionados-preview.visible { display: block; }
+
+    .preview-header {
       display: flex;
       align-items: center;
-      justify-content: center;
-      transition: all var(--transition);
-      color: transparent; /* oculta o SVG no estado não selecionado */
-    }
-    .item-chip.selecionado .chip-check {
-      background: var(--selected);
-      border-color: var(--selected);
-      color: #fff; /* exibe o SVG apenas quando selecionado */
-    }
-    .chip-nome {
-      font-size: .88rem;
-      font-weight: 500;
-      color: var(--text-head);
-      line-height: 1.3;
-    }
-    .item-chip.selecionado .chip-nome {
-      color: var(--selected-dark);
-      font-weight: 600;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
-    /* ── "Outro item" collapsible ────────────────────── */
+    .preview-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--gold-hi);
+    }
+
+    .preview-label svg { width: 15px; height: 15px; }
+
+    .btn-limpar-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      padding: 0 12px;
+      border: 1px solid rgba(252, 165, 165, .45);
+      border-radius: 999px;
+      background: none;
+      color: var(--vermelho);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color .15s ease;
+    }
+
+    .btn-limpar-inline svg { width: 13px; height: 13px; }
+
+    @media (hover: hover) {
+      .btn-limpar-inline:hover { background: rgba(252, 165, 165, .1); }
+    }
+
+    #preview-lista {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .preview-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 6px 5px 12px;
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .preview-tag button {
+      width: 22px;
+      height: 22px;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(11, 11, 12, .12);
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    @media (hover: hover) {
+      .preview-tag button:hover { background: rgba(11, 11, 12, .25); }
+    }
+
+    /* ── Outro item ───────────────────────────────────── */
     .outros-toggle-bar {
       display: flex;
       align-items: center;
-      gap: .6rem;
+      gap: 14px;
       cursor: pointer;
       user-select: none;
-      padding: .1rem 0;
-      transition: opacity var(--transition);
     }
-    .outros-toggle-bar:hover { opacity: .75; }
-    .outros-toggle-bar .card-label { margin: 0; flex: 1; }
-    .eye-btn { font-size: 1.1rem; line-height: 1; }
+
+    .outros-toggle-bar:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 4px;
+      border-radius: 10px;
+    }
+
+    .outros-toggle-bar .card-title { flex: 1; }
+    .eye-btn svg { width: 18px; height: 18px; }
+
     .toggle-indicator {
-      font-size: .75rem;
-      color: var(--text-muted);
+      font-size: 13px;
       font-weight: 500;
+      color: var(--dim);
       white-space: nowrap;
     }
 
@@ -273,419 +482,466 @@
       opacity: 0;
       transition: max-height .32s ease, opacity .25s ease, margin-top .2s ease;
     }
+
     .outros-content.open {
       max-height: 260px;
       opacity: 1;
-      margin-top: .85rem;
+      margin-top: 18px;
     }
+
     .outros-hint {
-      font-size: .82rem;
-      color: var(--text-muted);
-      font-style: italic;
-      margin-bottom: .75rem;
-      padding: .55rem .8rem;
-      background: var(--brand-pale);
-      border-radius: var(--radius-sm);
-      border-left: 3px solid var(--brand-light);
-      line-height: 1.5;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: rgba(246, 245, 241, .05);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--dim);
     }
+
+    .outros-hint strong { color: var(--paper); font-weight: 600; }
+
     .outros-wrap {
       display: flex;
-      gap: .5rem;
+      gap: 8px;
       align-items: center;
     }
-    .outros-wrap input {
-      flex: 1;
-      padding: .75rem 1rem;
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      font: 500 .92rem 'Inter', sans-serif;
-      color: var(--text-head);
-      background: var(--brand-bg);
-      outline: none;
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-    .outros-wrap input::placeholder { color: var(--text-muted); font-weight: 400; }
-    .outros-wrap input:focus {
-      border-color: var(--brand-mid);
-      box-shadow: 0 0 0 3px rgba(160,98,42,.15);
-      background: #fff;
-    }
+
+    .outros-wrap .campo { flex: 1; min-width: 0; }
+
     .btn-add-outro {
-      padding: .75rem 1rem;
-      background: var(--brand-pale);
-      border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background var(--transition), border-color var(--transition);
-      line-height: 1;
-    }
-    .btn-add-outro:hover { background: var(--accent-soft); border-color: var(--accent); }
-
-    /* ── Selected items preview ──────────────────────── */
-    #selecionados-preview {
-      display: none;
-      margin-top: 1rem;
-      padding: .85rem 1rem;
-      background: var(--selected-soft);
-      border: 1.5px solid var(--selected);
-      border-radius: var(--radius-sm);
-    }
-    #selecionados-preview.visible { display: block; }
-
-    .preview-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: .5rem;
-    }
-    .preview-label {
-      font-size: .72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      color: var(--selected);
-    }
-    .btn-limpar-inline {
+      flex: none;
+      width: 50px;
+      height: 50px;
+      border: 1px solid rgba(230, 178, 62, .55);
+      border-radius: 10px;
       background: none;
-      border: 1px solid #fca5a5;
-      border-radius: 6px;
-      font-size: .72rem;
-      color: #b91c1c;
+      color: var(--gold-hi);
+      font-size: 17px;
       cursor: pointer;
-      padding: .2rem .55rem;
-      font-weight: 600;
-      transition: all var(--transition);
-    }
-    .btn-limpar-inline:hover { background: #fee2e2; }
-
-    #preview-lista {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .35rem;
-    }
-    .preview-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-      padding: .25rem .65rem;
-      background: var(--selected);
-      color: #fff;
-      border-radius: 99px;
-      font-size: .78rem;
-      font-weight: 600;
-    }
-    .preview-tag button {
-      background: none;
-      border: none;
-      color: rgba(255,255,255,.8);
-      cursor: pointer;
-      font-size: .85rem;
-      padding: 0;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-    }
-    .preview-tag button:hover { color: #fff; }
-
-    /* ── Empty state ─────────────────────────────────── */
-    #empty-state {
-      display: none;
-      text-align: center;
-      padding: 2.5rem 1.5rem;
-    }
-    #empty-state.visible { display: block; }
-    #empty-state .empty-icon { font-size: 2.5rem; margin-bottom: .75rem; }
-    #empty-state p {
-      font-size: .92rem;
-      color: var(--text-muted);
-      font-weight: 500;
+      transition: background-color .15s ease, color .15s ease;
     }
 
-    /* ── Sticky CTA bar ──────────────────────────────── */
+    .btn-add-outro:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 3px;
+    }
+
+    @media (hover: hover) {
+      .btn-add-outro:hover { background: var(--gold); color: var(--ink); }
+    }
+
+    /* ── Botão de confirmar ───────────────────────────── */
+    /* No celular, numa barra presa embaixo da tela. */
     .cta-bar {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      padding: .85rem 1.25rem max(1rem, env(safe-area-inset-bottom));
-      background: rgba(253,246,238,.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-top: 1px solid var(--border);
+      bottom: 0;
       z-index: 100;
+      padding: 12px 16px max(14px, env(safe-area-inset-bottom));
+      background: rgba(11, 11, 12, .92);
+      border-top: 1px solid var(--line);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
     }
+
     .btn-submit {
+      position: relative;
       width: 100%;
       max-width: 560px;
+      min-height: 54px;
       margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: .6rem;
-      padding: 1rem 1.5rem;
-      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-sm);
-      font: 700 1rem 'Inter', sans-serif;
+      gap: 10px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--gold);
+      color: var(--ink);
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
-      box-shadow: var(--shadow-md);
-      letter-spacing: .01em;
+      transition: background-color .2s ease, opacity .2s ease;
     }
-    .btn-submit:hover:not(:disabled) {
-      opacity: .92;
-      transform: translateY(-1px);
-      box-shadow: var(--shadow-lg);
+
+    .btn-submit:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 3px;
     }
-    .btn-submit:active:not(:disabled) { transform: translateY(0); }
-    .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+
+    .btn-submit:disabled { opacity: .6; cursor: progress; }
+
     .btn-submit .btn-spinner {
+      display: none;
       width: 18px;
       height: 18px;
-      border: 2.5px solid rgba(255,255,255,.4);
-      border-top-color: #fff;
+      border: 2.5px solid rgba(11, 11, 12, .25);
+      border-top-color: var(--ink);
       border-radius: 50%;
       animation: spin .75s linear infinite;
-      display: none;
     }
+
     .btn-submit.loading .btn-spinner { display: block; }
     .btn-submit.loading .btn-label { opacity: 0; position: absolute; }
 
-    /* ── Modals ──────────────────────────────────────── */
+    @media (hover: hover) {
+      .btn-submit:not(:disabled):hover { background: var(--gold-hi); }
+    }
+
+    /* ── Janelas ──────────────────────────────────────── */
+    /* No celular sobem de baixo, como uma gaveta; no computador, no meio. */
     .modal-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(30,15,5,.55);
       z-index: 200;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
       align-items: flex-end;
       justify-content: center;
+      background: rgba(0, 0, 0, .7);
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
     }
+
     .modal-overlay.open { display: flex; animation: fadeIn .2s ease; }
 
-    @media (min-width: 480px) {
-      .modal-overlay { align-items: center; }
-      .modal-sheet { border-radius: var(--radius-lg) !important; max-width: 420px; width: 100%; }
-    }
-
     .modal-sheet {
-      background: var(--surface);
-      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       width: 100%;
-      padding: 1.75rem 1.5rem 2rem;
+      padding: 26px 24px max(28px, env(safe-area-inset-bottom));
+      border: 1px solid rgba(255, 255, 255, .1);
+      border-bottom: 0;
+      border-radius: 20px 20px 0 0;
+      background: #17140f;
+      box-shadow: 0 -12px 40px rgba(0, 0, 0, .5);
       animation: slideUp .25s ease;
     }
+
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: none; opacity: 1; } }
 
     .modal-handle {
       width: 40px;
       height: 4px;
-      background: var(--border);
+      margin: 0 auto 22px;
       border-radius: 2px;
-      margin: 0 auto 1.5rem;
+      background: rgba(246, 245, 241, .2);
     }
-    .modal-icon { font-size: 2.5rem; text-align: center; margin-bottom: .75rem; }
+
+    .modal-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(230, 178, 62, .12);
+      color: var(--gold);
+    }
+
+    .modal-icon svg { width: 30px; height: 30px; }
+
+    #errorModal .modal-icon { background: rgba(252, 165, 165, .12); color: var(--vermelho); }
+
     .modal-title {
-      font-size: 1.2rem;
-      font-weight: 800;
-      color: var(--text-head);
+      margin-bottom: 8px;
+      font-size: 20px;
+      font-weight: 700;
       text-align: center;
-      margin-bottom: .4rem;
     }
+
+    #errorModal .modal-title { color: var(--vermelho); }
+
     .modal-body {
-      font-size: .92rem;
-      color: var(--text-muted);
-      text-align: center;
+      margin-bottom: 24px;
+      font-size: 15px;
       line-height: 1.6;
-      margin-bottom: 1.5rem;
+      color: var(--dim);
+      text-align: center;
     }
+
+    .modal-body strong { color: var(--paper); font-weight: 600; }
+
+    /* A lista do resumo, antes de confirmar. */
     .modal-body.items-list {
-      text-align: left;
-      background: var(--brand-pale);
-      border-radius: var(--radius-sm);
-      padding: .75rem 1rem;
-      color: var(--text-body);
       max-height: 240px;
       overflow-y: auto;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(246, 245, 241, .05);
+      color: var(--paper);
+      text-align: left;
       line-height: 1.8;
     }
-    .grupo-resumo { }
+
     .grupo-sep {
       margin-top: .6rem;
       padding-top: .6rem;
-      border-top: 1px dashed var(--border);
+      border-top: 1px dashed rgba(246, 245, 241, .15);
     }
-    .grupo-item-linha {
-      font-size: .88rem;
-      color: var(--text-body);
-    }
+
+    .grupo-item-linha { font-size: 14px; }
+
     .total-line {
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--selected-dark);
       margin-top: .25rem;
       padding-top: .25rem;
-      border-top: 1px solid rgba(22,163,74,.25);
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold-hi);
     }
-    .modal-actions { display: flex; gap: .75rem; flex-direction: column; }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .modal-btn {
-      padding: .9rem 1.5rem;
-      border-radius: var(--radius-sm);
-      font: 700 .95rem 'Inter', sans-serif;
-      border: none;
+      min-height: 50px;
+      padding: 0 22px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font: inherit;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      transition: opacity var(--transition), transform var(--transition);
+      transition: background-color .2s ease, color .2s ease;
     }
-    .modal-btn:hover { opacity: .88; }
-    .modal-btn:active { transform: scale(.98); }
-    .modal-btn.primary {
-      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-mid) 100%);
-      color: #fff;
+
+    .modal-btn:focus-visible {
+      outline: 2px solid var(--gold-hi);
+      outline-offset: 3px;
     }
-    .modal-btn.secondary { background: var(--brand-pale); color: var(--brand); }
-    .modal-btn.danger    { background: #FEE2E2; color: #B91C1C; }
 
-    #errorModal .modal-title { color: #B91C1C; }
+    .modal-btn.primary { background: var(--gold); color: var(--ink); }
 
-    /* ── SVG Icon sizing ─────────────────────────────── */
-    .hero-icon svg          { width: 56px; height: 56px; display: block; margin: 0 auto;
-                              filter: drop-shadow(0 4px 12px rgba(0,0,0,.25)); }
-    .input-icon svg         { width: 18px; height: 18px; }
-    .empty-icon svg         { width: 52px; height: 52px; color: var(--text-muted); }
-    .cat-icone              { display: flex; align-items: center; }
-    .cat-icone svg          { width: 16px; height: 16px; }
-    .chip-check svg         { width: 11px; height: 11px; }
-    .eye-btn                { display: flex; align-items: center; }
-    .eye-btn svg            { width: 18px; height: 18px; }
-    .modal-icon svg         { width: 48px; height: 48px; margin: 0 auto; display: block; }
-    .btn-limpar-inline svg  { width: 13px; height: 13px; vertical-align: -2px; }
-    .btn-label svg          { width: 18px; height: 18px; vertical-align: -4px; }
-    .preview-label svg      { width: 13px; height: 13px; vertical-align: -2px; }
+    .modal-btn.secondary {
+      border-color: rgba(230, 178, 62, .55);
+      background: none;
+      color: var(--gold-hi);
+    }
 
-    /* ── Responsive ──────────────────────────────────── */
+    .modal-btn.danger {
+      border-color: rgba(252, 165, 165, .5);
+      background: none;
+      color: var(--vermelho);
+    }
+
+    @media (hover: hover) {
+      .modal-btn.primary:hover { background: var(--gold-hi); }
+      .modal-btn.secondary:hover { background: rgba(230, 178, 62, .12); }
+      .modal-btn.danger:hover { background: rgba(252, 165, 165, .1); }
+    }
+
+    /* ── Rodapé ───────────────────────────────────────── */
+    .rodape {
+      padding: 22px 16px 22px;
+      border-top: 1px solid var(--fio);
+      background: rgba(11, 11, 12, .6);
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--dim);
+    }
+
+    .rodape a { color: var(--gold-hi); text-decoration: none; }
+    .rodape a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── Telas maiores ────────────────────────────────── */
     @media (min-width: 480px) {
-      .container { padding: 0 1.5rem 7rem; }
-      .itens-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .modal-overlay { align-items: center; padding: 24px; }
+
+      .modal-sheet {
+        max-width: 420px;
+        padding-bottom: 28px;
+        border-bottom: 1px solid rgba(255, 255, 255, .1);
+        border-radius: 16px;
+      }
+
+      .modal-handle { display: none; }
+    }
+
+    /* Celular e tablet: espaço no fim da página para a barra do botão. */
+    @media (max-width: 959px) {
+      body { padding-bottom: 82px; }
+    }
+
+    /* Computador: nome, selecionados, outro item e o botão numa coluna à
+       esquerda, que acompanha a rolagem; os itens à direita. */
+    @media (min-width: 960px) {
+      .grade {
+        display: grid;
+        grid-template-columns: minmax(300px, 1fr) minmax(0, 1.5fr);
+        gap: 16px 40px;
+        align-items: start;
+      }
+
+      .coluna {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      /* Presa no alto enquanto se rola a lista; se ficar mais alta que a
+         tela, rola por dentro. A folga de 4px não corta o contorno de foco. */
+      .coluna--lateral {
+        position: sticky;
+        top: 20px;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        margin: -4px;
+        padding: 4px;
+      }
+
+      .cta-bar {
+        position: static;
+        padding: 0;
+        border: 0;
+        background: none;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+
+      .btn-submit { max-width: none; }
+      .itens-grid { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+    }
+
+    /* Celular: abertura centralizada, como nas páginas do site. */
+    @media (max-width: 560px) {
+      .topo { justify-content: center; padding: 0 16px; }
+      .topo img { height: 48px; }
+      .abertura { text-align: center; }
+      .abertura p { margin-left: auto; margin-right: auto; }
+      .kicker { letter-spacing: 2px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .modal-overlay.open, .modal-sheet { animation: none; }
+      .outros-content { transition: none; }
+      .spinner, .btn-submit .btn-spinner { animation-duration: 1.6s; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Hero -->
-  <header class="hero">
-    <div class="hero-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M17 8h2a2 2 0 1 1 0 4h-2"/>
-        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z"/>
-        <path d="M7 3c0 1.4 1.6 1.4 1.6 2.8"/>
-        <path d="M11 3c0 1.4 1.6 1.4 1.6 2.8"/>
-      </svg>
-    </div>
-    <h1>CAFÉ DA MANHÃ</h1>
-    <p>CONSAGRAÇÃO — marque, abaixo, os itens que você deseja contribuir.</p>
+  <header class="topo">
+    <a href="https://invbotafogo.com.br" aria-label="Igreja de Nova Vida em Botafogo — ir para o site">
+      <img src="logo.png" alt="Nova Vida Botafogo" />
+    </a>
   </header>
 
-  <!-- Loading -->
-  <div id="loading-state">
-    <div class="spinner"></div>
-    <p>Carregando itens disponíveis…</p>
-  </div>
+  <main class="pagina">
 
-  <!-- Form (hidden until items load) -->
-  <form id="formulario" style="display:none;" onsubmit="return false;">
-    <div class="container">
+    <section class="abertura">
+      <span class="kicker">Consagração</span>
+      <h1>Café da manhã</h1>
+      <p>Marque, abaixo, os itens que você deseja contribuir.</p>
+    </section>
 
-      <!-- Name -->
-      <div class="card">
-        <div class="card-label">Seu nome</div>
-        <div class="input-wrap">
-          <span class="input-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
-          </span>
-          <input type="text" id="nome" placeholder="Digita aqui o seu nome" autocomplete="name" required />
-        </div>
-      </div>
-
-      <!-- Items by category -->
-      <div class="card">
-        <div class="card-label">Itens disponíveis</div>
-        <!-- Linha divisória entre header e categorias -->
-        <div class="card-section-divider"></div>
-
-        <!-- Empty state (all items taken) -->
-        <div id="empty-state">
-          <div class="empty-icon">
-<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="12" cy="12" r="10" />
-  <polyline points="7,12.5 10.5,16 17,9" stroke="#22c55e" stroke-width="2" />
-</svg>
-          </div>
-          <p>Todos os itens já foram contribuídos.<br>Utilize o campo “OUTRO ITEM” caso deseje acrescentar algum item adicional.</p>
-        </div>
-
-        <!-- Categories rendered by JS -->
-        <div id="categorias-wrapper"></div>
-
-        <!-- Selected preview -->
-        <div id="selecionados-preview">
-          <div class="preview-header">
-            <div class="preview-label">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              Selecionados
-            </div>
-            <button type="button" class="btn-limpar-inline" onclick="limparSelecao()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-              Limpar tudo
-            </button>
-          </div>
-          <div id="preview-lista"></div>
-        </div>
-      </div>
-
-      <!-- Other item (collapsible) -->
-      <div class="card">
-        <div class="outros-toggle-bar" onclick="toggleOutros()" id="outrosToggle" role="button" aria-expanded="false">
-          <span class="eye-btn" id="eyeIcon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </span>
-          <span class="card-label">Outro item</span>
-          <span class="toggle-indicator" id="eyeLabel">▼ mostrar</span>
-        </div>
-        <div id="outros-content" class="outros-content">
-          <p class="outros-hint">Preencha somente se desejar levar um item que <strong>não está na lista acima</strong>.</p>
-          <div class="outros-wrap">
-            <input type="text" id="outros" placeholder="Descreva o item…" />
-            <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item">＋</button>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /container -->
-
-    <!-- Sticky CTA bar -->
-    <div class="cta-bar">
-      <button type="button" class="btn-submit" id="btnEnviar" onclick="confirmarEnvio()">
-        <div class="btn-spinner"></div>
-        <span class="btn-label">Confirmar contribuição</span>
-      </button>
+    <!-- Carregando -->
+    <div id="loading-state">
+      <div class="spinner"></div>
+      <p>Carregando itens disponíveis…</p>
     </div>
 
-  </form>
+    <!-- Formulário (aparece quando os itens carregam) -->
+    <form id="formulario" style="display:none;" onsubmit="return false;">
+      <div class="grade">
 
-  <!-- ── Modal: Revisão / Confirmação de envio ──────── -->
-  <div id="confirmModal" class="modal-overlay" role="dialog" aria-modal="true">
+        <div class="coluna coluna--lateral">
+
+          <!-- Nome -->
+          <section class="card card--nome">
+            <div class="card-header">
+              <div class="card-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></div>
+              <h2 class="card-title"><label for="nome">Seu nome</label></h2>
+            </div>
+            <input type="text" id="nome" class="campo" placeholder="Digita aqui o seu nome" autocomplete="name" required />
+          </section>
+
+          <!-- Selecionados -->
+          <div id="selecionados-preview">
+            <div class="preview-header">
+              <div class="preview-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                Selecionados
+              </div>
+              <button type="button" class="btn-limpar-inline" onclick="limparSelecao()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Limpar tudo
+              </button>
+            </div>
+            <div id="preview-lista"></div>
+          </div>
+
+          <!-- Outro item (abre e fecha) -->
+          <section class="card card--outro">
+            <div class="outros-toggle-bar" onclick="toggleOutros()" id="outrosToggle" role="button" tabindex="0" aria-expanded="false" aria-controls="outros-content" onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggleOutros(); }">
+              <span class="eye-btn" id="eyeIcon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+              <span class="card-title">Outro item</span>
+              <span class="toggle-indicator" id="eyeLabel">▼ mostrar</span>
+            </div>
+            <div id="outros-content" class="outros-content">
+              <p class="outros-hint">Preencha somente se desejar levar um item que <strong>não está na lista acima</strong>.</p>
+              <div class="outros-wrap">
+                <input type="text" id="outros" class="campo" placeholder="Descreva o item…" />
+                <button type="button" class="btn-add-outro" onclick="adicionarOutro()" aria-label="Adicionar item"><i class="fa-solid fa-plus" aria-hidden="true"></i></button>
+              </div>
+            </div>
+          </section>
+
+          <!-- Botão de confirmar -->
+          <div class="cta-bar">
+            <button type="button" class="btn-submit" id="btnEnviar" onclick="confirmarEnvio()">
+              <div class="btn-spinner"></div>
+              <span class="btn-label">Confirmar contribuição</span>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="coluna coluna--itens">
+
+          <!-- Itens por categoria -->
+          <section class="card card--itens">
+            <div class="card-header">
+              <div class="card-icon"><i class="fa-solid fa-mug-hot" aria-hidden="true"></i></div>
+              <h2 class="card-title">Itens disponíveis</h2>
+            </div>
+
+            <!-- Todos os itens já foram escolhidos -->
+            <div id="empty-state">
+              <div class="empty-icon"><i class="fa-solid fa-check" aria-hidden="true"></i></div>
+              <p>Todos os itens já foram contribuídos.<br>Utilize o campo “Outro item” caso deseje acrescentar algum item adicional.</p>
+            </div>
+
+            <!-- Categorias montadas pelo JavaScript -->
+            <div id="categorias-wrapper"></div>
+          </section>
+
+        </div>
+
+      </div>
+    </form>
+
+  </main>
+
+  <footer class="rodape">
+    <p>© <span id="ano">2026</span> Igreja de Nova Vida em Botafogo</p>
+    <p><a href="https://invbotafogo.com.br">invbotafogo.com.br</a></p>
+  </footer>
+
+  <!-- ── Janela: revisão antes de enviar ─────────────── -->
+  <div id="confirmModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--brand-mid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       </div>
       <div class="modal-title" id="confirmTitle">Você deseja contribuir com:</div>
       <div class="modal-body items-list" id="confirmMessage"></div>
@@ -696,12 +952,12 @@
     </div>
   </div>
 
-  <!-- ── Modal: Item do mesmo tipo já selecionado ─── -->
+  <!-- ── Janela: item do mesmo tipo já selecionado ───── -->
   <div id="duplicadoModal" class="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#E8732A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
       <div class="modal-title">Atenção!</div>
       <div class="modal-body">
@@ -715,12 +971,12 @@
     </div>
   </div>
 
-  <!-- ── Modal: Erro ────────────────────────────────── -->
+  <!-- ── Janela: erro ────────────────────────────────── -->
   <div id="errorModal" class="modal-overlay" role="dialog" aria-modal="true">
     <div class="modal-sheet">
       <div class="modal-handle"></div>
       <div class="modal-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#E8732A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       </div>
       <div class="modal-title">Atenção</div>
       <div class="modal-body" id="errorMessage"></div>
@@ -827,7 +1083,7 @@
     // Normaliza string: minúsculas + remove acentos
     function normalizar(str) {
       return String(str).toLowerCase()
-        .normalize('NFD').replace(/[̀-ͯ]/g, '');
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     }
 
     // Detecta categoria de um item pelo nome
@@ -936,7 +1192,7 @@
         })
         .catch(function (err) {
           document.getElementById('loading-state').innerHTML =
-            '<p style="color:#B91C1C;font-weight:600;padding:1rem;text-align:center">' +
+            '<p style="color:#fca5a5;font-weight:600;padding:1rem;text-align:center">' +
             'Não foi possível carregar os itens.<br>' +
             '<small style="font-weight:400">Verifique a URL do Web App no código.</small></p>';
           console.error('Erro ao carregar itens:', err);
@@ -1307,6 +1563,9 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
     }
+  </script>
+  <script>
+    document.getElementById('ano').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
