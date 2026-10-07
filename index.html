@@ -969,7 +969,8 @@
       <div class="modal-title">Atenção!</div>
       <div class="modal-body">
         Você já selecionou <strong id="duplicadoNomeExistente"></strong>.<br><br>
-        Tem certeza que deseja levar também <strong id="duplicadoNomeNovo"></strong>?
+        Tem certeza que deseja levar também <strong id="duplicadoNomeNovo"></strong>?<br><br>
+        Total: <strong id="duplicadoTotal"></strong>
       </div>
       <div class="modal-actions">
         <button class="modal-btn primary" onclick="confirmarDuplicado()">Sim, quero os dois</button>
@@ -1131,14 +1132,18 @@
         .trim();
     }
 
-    // Retorna o item já selecionado do mesmo tipo, ou null
+    // Retorna os itens já selecionados do mesmo tipo (array vazio se nenhum)
     function encontrarDuplicadoDoTipo(nomeNovo) {
-      var baseNovo     = getNomeBase(nomeNovo);
-      var selecionados = Object.keys(itensSelecionados);
-      for (var i = 0; i < selecionados.length; i++) {
-        if (getNomeBase(selecionados[i]) === baseNovo) return selecionados[i];
-      }
-      return null;
+      var baseNovo = getNomeBase(nomeNovo);
+      return Object.keys(itensSelecionados).filter(function (n) {
+        return getNomeBase(n) === baseNovo;
+      });
+    }
+
+    // "A" | "A e B" | "A, B e C"
+    function juntarNomes(nomes) {
+      if (nomes.length <= 1) return nomes.join('');
+      return nomes.slice(0, -1).join(', ') + ' e ' + nomes[nomes.length - 1];
     }
 
     // Extrai quantidade e unidade do nome base:
@@ -1186,6 +1191,22 @@
         return qStr + (g.unit ? g.unit + ' ' : ' ') + g.resto;
       }
       return g.items.length + 'x ' + g.resto;
+    }
+
+    // Total do tipo base somando os já selecionados + o novo item
+    //   "7 PÃES (I)" + "7 PÃES (II)" → "14 PÃES"
+    function calcularTotalComNovo(nomeNovo) {
+      var base  = getNomeBase(nomeNovo);
+      var nomes = Object.keys(itensSelecionados).filter(function (n) {
+        return getNomeBase(n) === base;
+      });
+      nomes.push(nomeNovo);
+      var parsed = parseQuantidade(base);
+      var g = { items: nomes, totalQty: 0, unit: parsed.unit, resto: parsed.resto, hasQty: parsed.qty !== null };
+      if (g.hasQty) {
+        nomes.forEach(function (n) { g.totalQty += parseQuantidade(getNomeBase(n)).qty || 0; });
+      }
+      return formatarTotal(g);
     }
 
     // ── Carregar itens do Sheet ───────────────────────────────────────────────
@@ -1309,10 +1330,11 @@
 
       // ── Aviso de mesmo tipo já selecionado ──
       var duplicado = encontrarDuplicadoDoTipo(nome);
-      if (duplicado) {
+      if (duplicado.length) {
         itemDuplicadoPendente = { nomeNovo: nome, chipEl: chipEl };
-        document.getElementById('duplicadoNomeExistente').textContent = duplicado;
+        document.getElementById('duplicadoNomeExistente').textContent = juntarNomes(duplicado);
         document.getElementById('duplicadoNomeNovo').textContent      = nome;
+        document.getElementById('duplicadoTotal').textContent         = calcularTotalComNovo(nome);
         document.getElementById('duplicadoModal').classList.add('open');
         return;
       }
